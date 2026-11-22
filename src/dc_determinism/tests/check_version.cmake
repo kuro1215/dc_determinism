@@ -1,0 +1,16 @@
+# Runs `dc_determinism --version` and the tree-hash helper and checks that the embedded identity equals the
+# tree hash of the source directory (the binary must have been built from the current sources).
+execute_process(COMMAND "${DC_DETERMINISM}" --version OUTPUT_VARIABLE version_output RESULT_VARIABLE version_result)
+if(NOT version_result EQUAL 0)
+    message(FATAL_ERROR "dc_determinism --version failed (${version_result})")
+endif()
+execute_process(COMMAND "${TREEHASH}" --tree "${TREE}" OUTPUT_VARIABLE tree_output RESULT_VARIABLE tree_result)
+if(NOT tree_result EQUAL 0)
+    message(FATAL_ERROR "dc_determinism_treehash failed (${tree_result})")
+endif()
+string(STRIP "${version_output}" version_output)
+string(STRIP "${tree_output}" tree_output)
+if(NOT version_output STREQUAL "dc_determinism ${tree_output}")
+    message(FATAL_ERROR "version mismatch: '${version_output}' vs 'dc_determinism ${tree_output}'")
+endif()
+message(STATUS "OK: ${version_output}")

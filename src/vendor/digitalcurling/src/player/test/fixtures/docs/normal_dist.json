@@ -1,0 +1,8 @@
+{
+    "type": "normal_dist",
+    "gender": "male",
+    "max_speed": 4.0,
+    "stddev_speed": 0.0076,
+    "stddev_angle": 0.0018,
+    "seed": null
+}

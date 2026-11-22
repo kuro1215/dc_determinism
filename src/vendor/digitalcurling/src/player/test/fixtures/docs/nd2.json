@@ -1,0 +1,17 @@
+{
+    "type": "nd2",
+    "gender": "female",
+    "cw": {
+        "max_speed": 4.0,
+        "stddev_speed": 0.0076,
+        "stddev_angle": 0.0018,
+        "stddev_rotation": 0.0
+    },
+    "ccw": {
+        "max_speed": 4.0,
+        "stddev_speed": 0.0076,
+        "stddev_angle": 0.0018,
+        "stddev_rotation": 0.0
+    },
+    "seed": null
+}

@@ -1,0 +1,9 @@
+// Copyright (c) 2022-2026 UEC Takeshi Ito Laboratory
+// SPDX-License-Identifier: MIT
+
+#pragma once
+
+#define DIGITALCURLING_VERSION_MAJOR @digitalcurling_VERSION_MAJOR@
+#define DIGITALCURLING_VERSION_MINOR @digitalcurling_VERSION_MINOR@
+#define DIGITALCURLING_VERSION_PATCH @digitalcurling_VERSION_PATCH@
+#define DIGITALCURLING_VERSION_STRING "@digitalcurling_VERSION@"

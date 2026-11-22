@@ -1,0 +1,97 @@
+{
+  "schema": "dc-determinism-vendor-v1",
+  "tree_hash": "sha256 over sorted POSIX paths, each '<path>\\0<sha256(LF-normalized bytes)>'",
+  "digitalcurling": {
+    "source": "DigitalCurling",
+    "license": "MIT",
+    "revision": "762eef67560cd83b23ef3afd272ac45e1ff28d7b",
+    "git_tree": "777ca687c32fb23a249c5be89aedde612255f395",
+    "archive_paths": [
+      "CMakeLists.txt",
+      "LICENSE",
+      "cmake",
+      "src"
+    ],
+    "tree_sha256_lf": "f8dfb30b23964fb2b387dbe6c2d8af43a5d2715a2a5d3214a900acce7b91ca27"
+  },
+  "dependencies": {
+    "fpm": {
+      "source": "git:https://github.com/MikeLankamp/fpm.git",
+      "pin": "b46537fe9697e1a598ac8a26f8ae43d8b286ac3f",
+      "git_tree": "43a2b87bbf9226198d3f42de8ae260329a362fae",
+      "paths": [
+        "include",
+        "LICENSE"
+      ],
+      "role": "loader+player",
+      "upstream_archive_sha256": "61ef2c323baeea8de5fcceec4c15488d0d3d15a3b3a190d364d34ef557806714",
+      "tree_sha256_lf": "7f69dd0f76cd25413de370d3eed2bc64003a9f380cc457429bc47584e6d650f7",
+      "overlay": [
+        "CMakeLists.txt"
+      ]
+    },
+    "nlohmann-json": {
+      "source": "git:https://github.com/nlohmann/json.git",
+      "pin": "55f93686c01528224f448c19128836e7df245f72",
+      "git_tree": "1eb780542e829bf1615828ed0d5f407497bbce7b",
+      "paths": [
+        "CMakeLists.txt",
+        "LICENSE.MIT",
+        "cmake",
+        "include",
+        "single_include",
+        "nlohmann_json.natvis"
+      ],
+      "role": "loader+player",
+      "upstream_archive_sha256": "67f4cdd9ca930c9c1e130af4a437c7fc98fab77a2846fc2d2a14b4943831f8ef",
+      "tree_sha256_lf": "a72217c82917d57ca986b0a709c2874c11f8fb449946bd38d1526aacaea1c1d8"
+    },
+    "box2d": {
+      "source": "git:https://github.com/erincatto/box2d.git",
+      "pin": "9ebbbcd960ad424e03e5de6e66a40764c16f51bc",
+      "git_tree": "8e3753a2138ca248b3a4e946384366f027962992",
+      "paths": [
+        "CMakeLists.txt",
+        "LICENSE",
+        "include",
+        "src"
+      ],
+      "role": "loader",
+      "upstream_archive_sha256": "03d4e5466e89bea30b0dcf1efa40a7c19ef527c1d8b55192bba6f7112b9b9ffe",
+      "tree_sha256_lf": "8271050a3631b98a769bb92b47ad5a6562c44e931ba90de02c0541747a233c4a"
+    },
+    "xxhash": {
+      "source": "git:https://github.com/Cyan4973/xxHash.git",
+      "pin": "e626a72bc2321cd320e953a0ccf1584cad60f363",
+      "git_tree": "9d4f447c856962a98e22f144bd9b0315ab4d18f8",
+      "paths": [
+        "LICENSE",
+        "xxhash.c",
+        "xxhash.h",
+        "xxh3.h",
+        "xxh_x86dispatch.c",
+        "xxh_x86dispatch.h"
+      ],
+      "role": "loader",
+      "upstream_archive_sha256": "34e71c085636fbc1726482996d92719d0a16e6a6097970ecf2990a27b3821162",
+      "tree_sha256_lf": "5e3a87b10be604070992c07dfa15f3fd7fd90210cd6535c0990e625f2cb830c7"
+    }
+  },
+  "dc_determinism_dependencies": {
+    "miniz": {
+      "source": "git:https://github.com/richgel999/miniz.git",
+      "pin": "77d0dce8627735138c51770d1799a1ef48f2117d",
+      "git_tree": "8bd3db5041bf24fe6591c4752ecbb46a6919e414",
+      "release": "3.1.2",
+      "release_asset": "https://github.com/richgel999/miniz/releases/download/3.1.2/miniz-3.1.2.zip",
+      "paths": [
+        "miniz.c",
+        "miniz.h",
+        "LICENSE"
+      ],
+      "role": "dc_determinism",
+      "upstream_archive_sha256": "f0446d863f9c19926ad9483c523fdc42e42b8d4a6a431d27e09d49c79a140d9a",
+      "tree_sha256_lf": "19320aeb0aa3c0727268a098e30dd7dfb84ebe746a69517d07c043d1e2ca0a58"
+    }
+  }
+}

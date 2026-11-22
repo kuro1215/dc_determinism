@@ -1,0 +1,488 @@
+{
+  "schema": "dc-prebuilt-windows-amd64-v1",
+  "image_id": "native-windows-amd64",
+  "source": {
+    "revision": "762eef67560cd83b23ef3afd272ac45e1ff28d7b",
+    "git_tree": "777ca687c32fb23a249c5be89aedde612255f395",
+    "tree_sha256_lf": "f8dfb30b23964fb2b387dbe6c2d8af43a5d2715a2a5d3214a900acce7b91ca27"
+  },
+  "dependencies": {
+    "fpm": "61ef2c323baeea8de5fcceec4c15488d0d3d15a3b3a190d364d34ef557806714",
+    "nlohmann-json": "67f4cdd9ca930c9c1e130af4a437c7fc98fab77a2846fc2d2a14b4943831f8ef",
+    "box2d": "03d4e5466e89bea30b0dcf1efa40a7c19ef527c1d8b55192bba6f7112b9b9ffe",
+    "xxhash": "34e71c085636fbc1726482996d92719d0a16e6a6097970ecf2990a27b3821162"
+  },
+  "toolchain": {
+    "msvc": {
+      "cl": "Microsoft (R) C/C++ Optimizing Compiler Version 19.52.37029 for x64",
+      "toolset_dir": "14.52.37025",
+      "link": "Microsoft (R) Incremental Linker Version 14.52.37029.0",
+      "windows_sdk": "10.0.26100.0",
+      "ucrt": "10.0.26100.0",
+      "ninja": "1.13.2",
+      "cmake": "cmake version 4.4.4"
+    },
+    "gcc": {
+      "compiler": "g++.EXE (Rev4, Built by MSYS2 project) 16.2.0",
+      "ld": "GNU ld (GNU Binutils) 2.47.20260726",
+      "msys2_packages": {
+        "mingw-w64-ucrt-x86_64-binutils": "2.47-3",
+        "mingw-w64-ucrt-x86_64-clang": "22.1.8-3",
+        "mingw-w64-ucrt-x86_64-clang-libs": "22.1.8-3",
+        "mingw-w64-ucrt-x86_64-crt": "14.0.0.r426.g4564ee4b5-1",
+        "mingw-w64-ucrt-x86_64-gcc": "16.2.0-4",
+        "mingw-w64-ucrt-x86_64-headers": "14.0.0.r426.g4564ee4b5-1",
+        "mingw-w64-ucrt-x86_64-libgcc": "16.2.0-4",
+        "mingw-w64-ucrt-x86_64-libstdc++": "16.2.0-4",
+        "mingw-w64-ucrt-x86_64-libwinpthread": "14.0.0.r426.g4564ee4b5-1",
+        "mingw-w64-ucrt-x86_64-winpthreads": "14.0.0.r426.g4564ee4b5-1"
+      },
+      "runtime_dlls": {
+        "libgcc_s_seh-1.dll": "68ca4574b331402879dec403ba4f14491c9b8fc4aa3f4a41432008714b9bc5df",
+        "libstdc++-6.dll": "b30dbd914d903992acb28b38455947153886656beafbd91c465c31aa258f9c45",
+        "libwinpthread-1.dll": "76cc52adfcdb8c800813b2ae8da42a908934eb1ee54ce8e9744fc8d703c76ee1"
+      },
+      "ninja": "1.13.2",
+      "cmake": "cmake version 4.4.4"
+    },
+    "clang": {
+      "compiler": "clang version 22.1.8 (https://github.com/msys2/MINGW-packages d34feaaa1d0aff624c870910b6f2589aa40d20de)",
+      "ld": "GNU ld (GNU Binutils) 2.47.20260726",
+      "msys2_packages": {
+        "mingw-w64-ucrt-x86_64-binutils": "2.47-3",
+        "mingw-w64-ucrt-x86_64-clang": "22.1.8-3",
+        "mingw-w64-ucrt-x86_64-clang-libs": "22.1.8-3",
+        "mingw-w64-ucrt-x86_64-crt": "14.0.0.r426.g4564ee4b5-1",
+        "mingw-w64-ucrt-x86_64-gcc": "16.2.0-4",
+        "mingw-w64-ucrt-x86_64-headers": "14.0.0.r426.g4564ee4b5-1",
+        "mingw-w64-ucrt-x86_64-libgcc": "16.2.0-4",
+        "mingw-w64-ucrt-x86_64-libstdc++": "16.2.0-4",
+        "mingw-w64-ucrt-x86_64-libwinpthread": "14.0.0.r426.g4564ee4b5-1",
+        "mingw-w64-ucrt-x86_64-winpthreads": "14.0.0.r426.g4564ee4b5-1"
+      },
+      "runtime_dlls": {
+        "libgcc_s_seh-1.dll": "68ca4574b331402879dec403ba4f14491c9b8fc4aa3f4a41432008714b9bc5df",
+        "libstdc++-6.dll": "b30dbd914d903992acb28b38455947153886656beafbd91c465c31aa258f9c45",
+        "libwinpthread-1.dll": "76cc52adfcdb8c800813b2ae8da42a908934eb1ee54ce8e9744fc8d703c76ee1"
+      },
+      "ninja": "1.13.2",
+      "cmake": "cmake version 4.4.4"
+    }
+  },
+  "libraries": {
+    "msvc": {
+      "filename": "digitalcurling_plugin_loader.dll",
+      "sha256": "9fdabf9e2a0ac8bbd22a8d56a22dfe23a97241abc822c85ed35b91ab05987906",
+      "sidecars": {},
+      "build": {
+        "executable": "C:/Program Files/Microsoft Visual Studio/18/Community/VC/Tools/MSVC/14.52.37025/bin/HostX64/x64/cl.EXE",
+        "version": "Microsoft (R) C/C++ Optimizing Compiler Version 19.52.37029 for x64",
+        "target": "x86_64-pc-windows-msvc",
+        "cmake": "cmake version 4.4.4",
+        "generator": "Visual Studio 18 2026",
+        "configure": [
+          "-S",
+          "<repo>/src/vendor/digitalcurling",
+          "-B",
+          "<build>/cmake",
+          "-G",
+          "Visual Studio 18 2026",
+          "-A",
+          "x64",
+          "-DCMAKE_CXX_STANDARD=17",
+          "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
+          "-DCMAKE_CXX_FLAGS_INIT=/Brepro",
+          "-DCMAKE_C_FLAGS_INIT=/Brepro",
+          "-DCMAKE_SHARED_LINKER_FLAGS_INIT=/Brepro",
+          "-DCMAKE_MODULE_LINKER_FLAGS_INIT=/Brepro",
+          "-DCMAKE_EXE_LINKER_FLAGS_INIT=/Brepro",
+          "-DBOX2D_BUILD_TESTBED=OFF",
+          "-DBOX2D_BUILD_UNIT_TESTS=OFF",
+          "-DDIGITALCURLING_BUILD_PLAYERS=OFF",
+          "-DDIGITALCURLING_BUILD_SIMULATORS=ON",
+          "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1=ON",
+          "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1PLUS=ON",
+          "-DDIGITALCURLING_BUILD_PLUGIN_LOADER=ON",
+          "-DDIGITALCURLING_PLUGIN_LOADER_SHARED=ON",
+          "-DDIGITALCURLING_BUNDLE_PLUGINS=ON",
+          "-DDIGITALCURLING_BUILD_TEST=OFF",
+          "-DDIGITALCURLING_BUILD_DOCS=OFF",
+          "-DFETCHCONTENT_SOURCE_DIR_FPM=<repo>/src/vendor/fpm",
+          "-DFETCHCONTENT_SOURCE_DIR_NLOHMANN_JSON=<repo>/src/vendor/nlohmann-json",
+          "-DFETCHCONTENT_SOURCE_DIR_BOX2D=<build>/inputs/box2d-patched",
+          "-DFETCHCONTENT_SOURCE_DIR_XXHASH=<repo>/src/vendor/xxhash",
+          "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
+        ],
+        "build": [
+          "--build",
+          "<build>/cmake",
+          "--config",
+          "Release",
+          "--target",
+          "digitalcurling_plugin_loader",
+          "--parallel"
+        ],
+        "receipt_identity": {
+          "recipe": 1,
+          "kind": "loader",
+          "sources": {
+            "simulator": {
+              "revision": "762eef67560cd83b23ef3afd272ac45e1ff28d7b",
+              "git_tree": "777ca687c32fb23a249c5be89aedde612255f395",
+              "tree_sha256_lf": "f8dfb30b23964fb2b387dbe6c2d8af43a5d2715a2a5d3214a900acce7b91ca27"
+            },
+            "dependencies": {
+              "fpm": {
+                "pin": "b46537fe9697e1a598ac8a26f8ae43d8b286ac3f",
+                "git_tree": "43a2b87bbf9226198d3f42de8ae260329a362fae",
+                "tree_sha256_lf": "7f69dd0f76cd25413de370d3eed2bc64003a9f380cc457429bc47584e6d650f7"
+              },
+              "nlohmann-json": {
+                "pin": "55f93686c01528224f448c19128836e7df245f72",
+                "git_tree": "1eb780542e829bf1615828ed0d5f407497bbce7b",
+                "tree_sha256_lf": "a72217c82917d57ca986b0a709c2874c11f8fb449946bd38d1526aacaea1c1d8"
+              },
+              "box2d": {
+                "pin": "9ebbbcd960ad424e03e5de6e66a40764c16f51bc",
+                "git_tree": "8e3753a2138ca248b3a4e946384366f027962992",
+                "tree_sha256_lf": "8271050a3631b98a769bb92b47ad5a6562c44e931ba90de02c0541747a233c4a"
+              },
+              "xxhash": {
+                "pin": "e626a72bc2321cd320e953a0ccf1584cad60f363",
+                "git_tree": "9d4f447c856962a98e22f144bd9b0315ab4d18f8",
+                "tree_sha256_lf": "5e3a87b10be604070992c07dfa15f3fd7fd90210cd6535c0990e625f2cb830c7"
+              }
+            }
+          },
+          "compiler": {
+            "id": "msvc",
+            "version": "Microsoft (R) C/C++ Optimizing Compiler Version 19.52.37029 for x64",
+            "target": "x86_64-pc-windows-msvc"
+          },
+          "cmake": "cmake version 4.4.4",
+          "generator": "Visual Studio 18 2026",
+          "flags": [
+            "-S",
+            "<repo>/src/vendor/digitalcurling",
+            "-B",
+            "<build>/cmake",
+            "-G",
+            "Visual Studio 18 2026",
+            "-A",
+            "x64",
+            "-DCMAKE_CXX_STANDARD=17",
+            "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
+            "-DCMAKE_CXX_FLAGS_INIT=/Brepro",
+            "-DCMAKE_C_FLAGS_INIT=/Brepro",
+            "-DCMAKE_SHARED_LINKER_FLAGS_INIT=/Brepro",
+            "-DCMAKE_MODULE_LINKER_FLAGS_INIT=/Brepro",
+            "-DCMAKE_EXE_LINKER_FLAGS_INIT=/Brepro",
+            "-DBOX2D_BUILD_TESTBED=OFF",
+            "-DBOX2D_BUILD_UNIT_TESTS=OFF",
+            "-DDIGITALCURLING_BUILD_PLAYERS=OFF",
+            "-DDIGITALCURLING_BUILD_SIMULATORS=ON",
+            "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1=ON",
+            "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1PLUS=ON",
+            "-DDIGITALCURLING_BUILD_PLUGIN_LOADER=ON",
+            "-DDIGITALCURLING_PLUGIN_LOADER_SHARED=ON",
+            "-DDIGITALCURLING_BUNDLE_PLUGINS=ON",
+            "-DDIGITALCURLING_BUILD_TEST=OFF",
+            "-DDIGITALCURLING_BUILD_DOCS=OFF",
+            "-DFETCHCONTENT_SOURCE_DIR_FPM=<repo>/src/vendor/fpm",
+            "-DFETCHCONTENT_SOURCE_DIR_NLOHMANN_JSON=<repo>/src/vendor/nlohmann-json",
+            "-DFETCHCONTENT_SOURCE_DIR_BOX2D=<build>/inputs/box2d-patched",
+            "-DFETCHCONTENT_SOURCE_DIR_XXHASH=<repo>/src/vendor/xxhash",
+            "-DFETCHCONTENT_FULLY_DISCONNECTED=ON",
+            "--build",
+            "<build>/cmake",
+            "--config",
+            "Release",
+            "--target",
+            "digitalcurling_plugin_loader",
+            "--parallel"
+          ]
+        }
+      }
+    },
+    "gcc": {
+      "filename": "libdigitalcurling_plugin_loader.dll",
+      "sha256": "cfa29aa89d6333d8ade11f03ef7cf4dd0822fda4932eefc2f7cc22150564caf2",
+      "sidecars": {
+        "libgcc_s_seh-1.dll": "68ca4574b331402879dec403ba4f14491c9b8fc4aa3f4a41432008714b9bc5df",
+        "libstdc++-6.dll": "b30dbd914d903992acb28b38455947153886656beafbd91c465c31aa258f9c45",
+        "libwinpthread-1.dll": "76cc52adfcdb8c800813b2ae8da42a908934eb1ee54ce8e9744fc8d703c76ee1"
+      },
+      "build": {
+        "executable": "C:/msys64/ucrt64/bin/g++.EXE",
+        "version": "g++.EXE (Rev4, Built by MSYS2 project) 16.2.0",
+        "target": "x86_64-w64-mingw32",
+        "cmake": "cmake version 4.4.4",
+        "generator": "Ninja",
+        "configure": [
+          "-S",
+          "<repo>/src/vendor/digitalcurling",
+          "-B",
+          "<build>/cmake",
+          "-G",
+          "Ninja",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DCMAKE_CXX_COMPILER=C:/msys64/ucrt64/bin/g++.EXE",
+          "-DCMAKE_C_COMPILER=C:/msys64/ucrt64/bin/gcc.EXE",
+          "-DCMAKE_CXX_STANDARD=17",
+          "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
+          "-DCMAKE_CXX_FLAGS_INIT=-ffile-prefix-map=<repo>=.",
+          "-DCMAKE_C_FLAGS_INIT=-ffile-prefix-map=<repo>=.",
+          "-DCMAKE_SHARED_LINKER_FLAGS_INIT=-Wl,--no-insert-timestamp",
+          "-DCMAKE_MODULE_LINKER_FLAGS_INIT=-Wl,--no-insert-timestamp",
+          "-DCMAKE_EXE_LINKER_FLAGS_INIT=-Wl,--no-insert-timestamp",
+          "-DBOX2D_BUILD_TESTBED=OFF",
+          "-DBOX2D_BUILD_UNIT_TESTS=OFF",
+          "-DDIGITALCURLING_BUILD_PLAYERS=OFF",
+          "-DDIGITALCURLING_BUILD_SIMULATORS=ON",
+          "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1=ON",
+          "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1PLUS=ON",
+          "-DDIGITALCURLING_BUILD_PLUGIN_LOADER=ON",
+          "-DDIGITALCURLING_PLUGIN_LOADER_SHARED=ON",
+          "-DDIGITALCURLING_BUNDLE_PLUGINS=ON",
+          "-DDIGITALCURLING_BUILD_TEST=OFF",
+          "-DDIGITALCURLING_BUILD_DOCS=OFF",
+          "-DFETCHCONTENT_SOURCE_DIR_FPM=<repo>/src/vendor/fpm",
+          "-DFETCHCONTENT_SOURCE_DIR_NLOHMANN_JSON=<repo>/src/vendor/nlohmann-json",
+          "-DFETCHCONTENT_SOURCE_DIR_BOX2D=<build>/inputs/box2d-patched",
+          "-DFETCHCONTENT_SOURCE_DIR_XXHASH=<repo>/src/vendor/xxhash",
+          "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
+        ],
+        "build": [
+          "--build",
+          "<build>/cmake",
+          "--config",
+          "Release",
+          "--target",
+          "digitalcurling_plugin_loader",
+          "--parallel"
+        ],
+        "receipt_identity": {
+          "recipe": 1,
+          "kind": "loader",
+          "sources": {
+            "simulator": {
+              "revision": "762eef67560cd83b23ef3afd272ac45e1ff28d7b",
+              "git_tree": "777ca687c32fb23a249c5be89aedde612255f395",
+              "tree_sha256_lf": "f8dfb30b23964fb2b387dbe6c2d8af43a5d2715a2a5d3214a900acce7b91ca27"
+            },
+            "dependencies": {
+              "fpm": {
+                "pin": "b46537fe9697e1a598ac8a26f8ae43d8b286ac3f",
+                "git_tree": "43a2b87bbf9226198d3f42de8ae260329a362fae",
+                "tree_sha256_lf": "7f69dd0f76cd25413de370d3eed2bc64003a9f380cc457429bc47584e6d650f7"
+              },
+              "nlohmann-json": {
+                "pin": "55f93686c01528224f448c19128836e7df245f72",
+                "git_tree": "1eb780542e829bf1615828ed0d5f407497bbce7b",
+                "tree_sha256_lf": "a72217c82917d57ca986b0a709c2874c11f8fb449946bd38d1526aacaea1c1d8"
+              },
+              "box2d": {
+                "pin": "9ebbbcd960ad424e03e5de6e66a40764c16f51bc",
+                "git_tree": "8e3753a2138ca248b3a4e946384366f027962992",
+                "tree_sha256_lf": "8271050a3631b98a769bb92b47ad5a6562c44e931ba90de02c0541747a233c4a"
+              },
+              "xxhash": {
+                "pin": "e626a72bc2321cd320e953a0ccf1584cad60f363",
+                "git_tree": "9d4f447c856962a98e22f144bd9b0315ab4d18f8",
+                "tree_sha256_lf": "5e3a87b10be604070992c07dfa15f3fd7fd90210cd6535c0990e625f2cb830c7"
+              }
+            }
+          },
+          "compiler": {
+            "id": "gcc",
+            "version": "g++.EXE (Rev4, Built by MSYS2 project) 16.2.0",
+            "target": "x86_64-w64-mingw32"
+          },
+          "cmake": "cmake version 4.4.4",
+          "generator": "Ninja",
+          "flags": [
+            "-S",
+            "<repo>/src/vendor/digitalcurling",
+            "-B",
+            "<build>/cmake",
+            "-G",
+            "Ninja",
+            "-DCMAKE_BUILD_TYPE=Release",
+            "-DCMAKE_CXX_COMPILER=C:/msys64/ucrt64/bin/g++.EXE",
+            "-DCMAKE_C_COMPILER=C:/msys64/ucrt64/bin/gcc.EXE",
+            "-DCMAKE_CXX_STANDARD=17",
+            "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
+            "-DCMAKE_CXX_FLAGS_INIT=-ffile-prefix-map=<repo>=.",
+            "-DCMAKE_C_FLAGS_INIT=-ffile-prefix-map=<repo>=.",
+            "-DCMAKE_SHARED_LINKER_FLAGS_INIT=-Wl,--no-insert-timestamp",
+            "-DCMAKE_MODULE_LINKER_FLAGS_INIT=-Wl,--no-insert-timestamp",
+            "-DCMAKE_EXE_LINKER_FLAGS_INIT=-Wl,--no-insert-timestamp",
+            "-DBOX2D_BUILD_TESTBED=OFF",
+            "-DBOX2D_BUILD_UNIT_TESTS=OFF",
+            "-DDIGITALCURLING_BUILD_PLAYERS=OFF",
+            "-DDIGITALCURLING_BUILD_SIMULATORS=ON",
+            "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1=ON",
+            "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1PLUS=ON",
+            "-DDIGITALCURLING_BUILD_PLUGIN_LOADER=ON",
+            "-DDIGITALCURLING_PLUGIN_LOADER_SHARED=ON",
+            "-DDIGITALCURLING_BUNDLE_PLUGINS=ON",
+            "-DDIGITALCURLING_BUILD_TEST=OFF",
+            "-DDIGITALCURLING_BUILD_DOCS=OFF",
+            "-DFETCHCONTENT_SOURCE_DIR_FPM=<repo>/src/vendor/fpm",
+            "-DFETCHCONTENT_SOURCE_DIR_NLOHMANN_JSON=<repo>/src/vendor/nlohmann-json",
+            "-DFETCHCONTENT_SOURCE_DIR_BOX2D=<build>/inputs/box2d-patched",
+            "-DFETCHCONTENT_SOURCE_DIR_XXHASH=<repo>/src/vendor/xxhash",
+            "-DFETCHCONTENT_FULLY_DISCONNECTED=ON",
+            "--build",
+            "<build>/cmake",
+            "--config",
+            "Release",
+            "--target",
+            "digitalcurling_plugin_loader",
+            "--parallel"
+          ]
+        }
+      }
+    },
+    "clang": {
+      "filename": "libdigitalcurling_plugin_loader.dll",
+      "sha256": "824f2eb1f9c175ed6dc3851b4fe9faf7cd4317c499cc133497da5d63fd1109f2",
+      "sidecars": {
+        "libgcc_s_seh-1.dll": "68ca4574b331402879dec403ba4f14491c9b8fc4aa3f4a41432008714b9bc5df",
+        "libstdc++-6.dll": "b30dbd914d903992acb28b38455947153886656beafbd91c465c31aa258f9c45",
+        "libwinpthread-1.dll": "76cc52adfcdb8c800813b2ae8da42a908934eb1ee54ce8e9744fc8d703c76ee1"
+      },
+      "build": {
+        "executable": "C:/msys64/ucrt64/bin/clang++.EXE",
+        "version": "clang version 22.1.8 (https://github.com/msys2/MINGW-packages d34feaaa1d0aff624c870910b6f2589aa40d20de)",
+        "target": "x86_64-w64-windows-gnu",
+        "cmake": "cmake version 4.4.4",
+        "generator": "Ninja",
+        "configure": [
+          "-S",
+          "<repo>/src/vendor/digitalcurling",
+          "-B",
+          "<build>/cmake",
+          "-G",
+          "Ninja",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DCMAKE_CXX_COMPILER=C:/msys64/ucrt64/bin/clang++.EXE",
+          "-DCMAKE_C_COMPILER=C:/msys64/ucrt64/bin/clang.EXE",
+          "-DCMAKE_CXX_STANDARD=17",
+          "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
+          "-DCMAKE_CXX_FLAGS_INIT=-ffile-prefix-map=<repo>=.",
+          "-DCMAKE_C_FLAGS_INIT=-ffile-prefix-map=<repo>=.",
+          "-DCMAKE_SHARED_LINKER_FLAGS_INIT=-Wl,--no-insert-timestamp",
+          "-DCMAKE_MODULE_LINKER_FLAGS_INIT=-Wl,--no-insert-timestamp",
+          "-DCMAKE_EXE_LINKER_FLAGS_INIT=-Wl,--no-insert-timestamp",
+          "-DBOX2D_BUILD_TESTBED=OFF",
+          "-DBOX2D_BUILD_UNIT_TESTS=OFF",
+          "-DDIGITALCURLING_BUILD_PLAYERS=OFF",
+          "-DDIGITALCURLING_BUILD_SIMULATORS=ON",
+          "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1=ON",
+          "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1PLUS=ON",
+          "-DDIGITALCURLING_BUILD_PLUGIN_LOADER=ON",
+          "-DDIGITALCURLING_PLUGIN_LOADER_SHARED=ON",
+          "-DDIGITALCURLING_BUNDLE_PLUGINS=ON",
+          "-DDIGITALCURLING_BUILD_TEST=OFF",
+          "-DDIGITALCURLING_BUILD_DOCS=OFF",
+          "-DFETCHCONTENT_SOURCE_DIR_FPM=<repo>/src/vendor/fpm",
+          "-DFETCHCONTENT_SOURCE_DIR_NLOHMANN_JSON=<repo>/src/vendor/nlohmann-json",
+          "-DFETCHCONTENT_SOURCE_DIR_BOX2D=<build>/inputs/box2d-patched",
+          "-DFETCHCONTENT_SOURCE_DIR_XXHASH=<repo>/src/vendor/xxhash",
+          "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
+        ],
+        "build": [
+          "--build",
+          "<build>/cmake",
+          "--config",
+          "Release",
+          "--target",
+          "digitalcurling_plugin_loader",
+          "--parallel"
+        ],
+        "receipt_identity": {
+          "recipe": 1,
+          "kind": "loader",
+          "sources": {
+            "simulator": {
+              "revision": "762eef67560cd83b23ef3afd272ac45e1ff28d7b",
+              "git_tree": "777ca687c32fb23a249c5be89aedde612255f395",
+              "tree_sha256_lf": "f8dfb30b23964fb2b387dbe6c2d8af43a5d2715a2a5d3214a900acce7b91ca27"
+            },
+            "dependencies": {
+              "fpm": {
+                "pin": "b46537fe9697e1a598ac8a26f8ae43d8b286ac3f",
+                "git_tree": "43a2b87bbf9226198d3f42de8ae260329a362fae",
+                "tree_sha256_lf": "7f69dd0f76cd25413de370d3eed2bc64003a9f380cc457429bc47584e6d650f7"
+              },
+              "nlohmann-json": {
+                "pin": "55f93686c01528224f448c19128836e7df245f72",
+                "git_tree": "1eb780542e829bf1615828ed0d5f407497bbce7b",
+                "tree_sha256_lf": "a72217c82917d57ca986b0a709c2874c11f8fb449946bd38d1526aacaea1c1d8"
+              },
+              "box2d": {
+                "pin": "9ebbbcd960ad424e03e5de6e66a40764c16f51bc",
+                "git_tree": "8e3753a2138ca248b3a4e946384366f027962992",
+                "tree_sha256_lf": "8271050a3631b98a769bb92b47ad5a6562c44e931ba90de02c0541747a233c4a"
+              },
+              "xxhash": {
+                "pin": "e626a72bc2321cd320e953a0ccf1584cad60f363",
+                "git_tree": "9d4f447c856962a98e22f144bd9b0315ab4d18f8",
+                "tree_sha256_lf": "5e3a87b10be604070992c07dfa15f3fd7fd90210cd6535c0990e625f2cb830c7"
+              }
+            }
+          },
+          "compiler": {
+            "id": "clang",
+            "version": "clang version 22.1.8 (https://github.com/msys2/MINGW-packages d34feaaa1d0aff624c870910b6f2589aa40d20de)",
+            "target": "x86_64-w64-windows-gnu"
+          },
+          "cmake": "cmake version 4.4.4",
+          "generator": "Ninja",
+          "flags": [
+            "-S",
+            "<repo>/src/vendor/digitalcurling",
+            "-B",
+            "<build>/cmake",
+            "-G",
+            "Ninja",
+            "-DCMAKE_BUILD_TYPE=Release",
+            "-DCMAKE_CXX_COMPILER=C:/msys64/ucrt64/bin/clang++.EXE",
+            "-DCMAKE_C_COMPILER=C:/msys64/ucrt64/bin/clang.EXE",
+            "-DCMAKE_CXX_STANDARD=17",
+            "-DCMAKE_CXX_STANDARD_REQUIRED=ON",
+            "-DCMAKE_CXX_FLAGS_INIT=-ffile-prefix-map=<repo>=.",
+            "-DCMAKE_C_FLAGS_INIT=-ffile-prefix-map=<repo>=.",
+            "-DCMAKE_SHARED_LINKER_FLAGS_INIT=-Wl,--no-insert-timestamp",
+            "-DCMAKE_MODULE_LINKER_FLAGS_INIT=-Wl,--no-insert-timestamp",
+            "-DCMAKE_EXE_LINKER_FLAGS_INIT=-Wl,--no-insert-timestamp",
+            "-DBOX2D_BUILD_TESTBED=OFF",
+            "-DBOX2D_BUILD_UNIT_TESTS=OFF",
+            "-DDIGITALCURLING_BUILD_PLAYERS=OFF",
+            "-DDIGITALCURLING_BUILD_SIMULATORS=ON",
+            "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1=ON",
+            "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1PLUS=ON",
+            "-DDIGITALCURLING_BUILD_PLUGIN_LOADER=ON",
+            "-DDIGITALCURLING_PLUGIN_LOADER_SHARED=ON",
+            "-DDIGITALCURLING_BUNDLE_PLUGINS=ON",
+            "-DDIGITALCURLING_BUILD_TEST=OFF",
+            "-DDIGITALCURLING_BUILD_DOCS=OFF",
+            "-DFETCHCONTENT_SOURCE_DIR_FPM=<repo>/src/vendor/fpm",
+            "-DFETCHCONTENT_SOURCE_DIR_NLOHMANN_JSON=<repo>/src/vendor/nlohmann-json",
+            "-DFETCHCONTENT_SOURCE_DIR_BOX2D=<build>/inputs/box2d-patched",
+            "-DFETCHCONTENT_SOURCE_DIR_XXHASH=<repo>/src/vendor/xxhash",
+            "-DFETCHCONTENT_FULLY_DISCONNECTED=ON",
+            "--build",
+            "<build>/cmake",
+            "--config",
+            "Release",
+            "--target",
+            "digitalcurling_plugin_loader",
+            "--parallel"
+          ]
+        }
+      }
+    }
+  }
+}

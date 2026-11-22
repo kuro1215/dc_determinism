@@ -1,0 +1,7 @@
+* text=auto eol=lf
+*.exe -text
+*.dll -text
+*.so -text
+*.bin -text
+*.wasm -text
+prebuilt/** -text

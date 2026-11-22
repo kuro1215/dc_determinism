@@ -1,0 +1,2 @@
+# The Dockerfile needs no files of this repository: exclude everything from any build context.
+*

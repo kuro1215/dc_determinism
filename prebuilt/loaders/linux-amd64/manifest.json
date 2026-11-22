@@ -1,0 +1,43 @@
+{
+  "schema": "dc-prebuilt-linux-amd64-v1",
+  "image_id": "sha256:906b7bd93430664cd5d5f70cd1b556276c8511c9164cf8bc841487a91d46120f",
+  "source": {
+    "revision": "762eef67560cd83b23ef3afd272ac45e1ff28d7b",
+    "git_tree": "777ca687c32fb23a249c5be89aedde612255f395",
+    "tree_sha256_lf": "f8dfb30b23964fb2b387dbe6c2d8af43a5d2715a2a5d3214a900acce7b91ca27"
+  },
+  "dependencies": {
+    "fpm": "61ef2c323baeea8de5fcceec4c15488d0d3d15a3b3a190d364d34ef557806714",
+    "nlohmann-json": "67f4cdd9ca930c9c1e130af4a437c7fc98fab77a2846fc2d2a14b4943831f8ef",
+    "box2d": "03d4e5466e89bea30b0dcf1efa40a7c19ef527c1d8b55192bba6f7112b9b9ffe",
+    "xxhash": "34e71c085636fbc1726482996d92719d0a16e6a6097970ecf2990a27b3821162"
+  },
+  "libraries": {
+    "gcc": {
+      "filename": "libdigitalcurling_plugin_loader.so",
+      "sha256": "d2137b34f6182b7a2a737892db96dcd5d396aa8326a4a9c6388384fdf1b37f4b",
+      "sidecars": {},
+      "build": {
+        "compiler_version": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "target": "x86_64-linux-gnu",
+        "cmake": "cmake version 3.28.3",
+        "generator": "Unix Makefiles",
+        "build_command": "cmake --build <build-dir> --config Release --target digitalcurling_plugin_loader --parallel <jobs>",
+        "runtime_dependencies": "\tlinux-vdso.so.1\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6\n\t/lib64/ld-linux-x86-64.so.2\n"
+      }
+    },
+    "clang": {
+      "filename": "libdigitalcurling_plugin_loader.so",
+      "sha256": "654d985b2d8957ba04f3e4e54bee81f6cc17c0e5362664e4cb08ffe79108833e",
+      "sidecars": {},
+      "build": {
+        "compiler_version": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+        "target": "x86_64-pc-linux-gnu",
+        "cmake": "cmake version 3.28.3",
+        "generator": "Unix Makefiles",
+        "build_command": "cmake --build <build-dir> --config Release --target digitalcurling_plugin_loader --parallel <jobs>",
+        "runtime_dependencies": "\tlinux-vdso.so.1\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6\n\t/lib64/ld-linux-x86-64.so.2\n"
+      }
+    }
+  }
+}

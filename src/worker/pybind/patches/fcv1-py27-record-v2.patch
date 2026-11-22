@@ -1,0 +1,232 @@
+diff --git a/src/fcv1_simulator.cpp b/src/fcv1_simulator.cpp
+index ac5e381..85ce7a0 100644
+--- a/src/fcv1_simulator.cpp
++++ b/src/fcv1_simulator.cpp
+@@ -8,6 +8,7 @@
+ #include <limits>
+ #include <pybind11/stl.h>
+ #include "fcv1_simulator.hpp"
++#include <algorithm>
+ #include <set>
+ #include <string>
+ #include <fstream>
+@@ -320,6 +321,10 @@ void SimulatorFCV1::modified_fgz_rule()
+ std::vector<std::vector<StonePosition>> SimulatorFCV1::step(float seconds_per_frame)
+ {
+     trajectory_list.clear();
++    frames_.clear();
++    std::fill(removed_steps_.begin(), removed_steps_.end(), -1);
++    step_count_ = 0;
++    record_frame(); // frame 0: the initial board
+     // simulate
+     while (!is_awake.empty())
+     {
+@@ -395,10 +400,98 @@ std::vector<std::vector<StonePosition>> SimulatorFCV1::step(float seconds_per_fr
+             seconds_per_frame,
+             8,  // velocityIterations (公式マニュアルでの推奨値は 8)
+             3); // positionIterations (公式マニュアルでの推奨値は 3)
++
++        ++step_count_;
++        remove_out_of_play_area();
++        if (step_count_ % frame_stride_ == 0)
++        {
++            record_frame();
++        }
++    }
++    if (step_count_ % frame_stride_ != 0)
++    {
++        record_frame(); // the final state as an additional last frame
+     }
+     return trajectory_list;
+ }
+ 
++void SimulatorFCV1::record_frame()
++{
++    for (size_t i = 0; i < kStoneMax; ++i)
++    {
++        b2Body *body = stone_bodies[i];
++        if (body->IsEnabled() && removed_steps_[i] < 0)
++        {
++            const b2Vec2 position = body->GetPosition();
++            const b2Vec2 velocity = body->GetLinearVelocity();
++            frames_.push_back(position.x);
++            frames_.push_back(position.y);
++            frames_.push_back(body->GetAngle());
++            frames_.push_back(velocity.x);
++            frames_.push_back(velocity.y);
++            frames_.push_back(body->GetAngularVelocity());
++        }
++        else
++        {
++            for (int field = 0; field < kRecordFields; ++field)
++            {
++                frames_.push_back(0.f); // absent stone: all fields zero
++            }
++        }
++    }
++}
++
++/// Mirrors DigitalCurling.Plugins SimulatorSimulate(): after each step a stone outside
++/// |x| < sheet_width / 2 - radius, 0 <= y <= kBackBoardY (43.892) - radius leaves the board.
++/// Recording only: the body keeps moving so that the physics stays the tournament engine's.
++void SimulatorFCV1::remove_out_of_play_area()
++{
++    if (removal_sheet_width_ <= 0.f)
++    {
++        return;
++    }
++    const float x_limit = removal_sheet_width_ / 2.0f - kStoneRadius;
++    const float y_limit = 43.892f - kStoneRadius;
++    for (size_t i = 0; i < kStoneMax; ++i)
++    {
++        b2Body *body = stone_bodies[i];
++        if (!body->IsEnabled() || removed_steps_[i] >= 0)
++        {
++            continue;
++        }
++        const b2Vec2 position = body->GetPosition();
++        if (!(std::abs(position.x) < x_limit && position.y <= y_limit && position.y >= 0.f))
++        {
++            removed_steps_[i] = step_count_;
++        }
++    }
++}
++
++void SimulatorFCV1::set_frame_stride(int frame_stride)
++{
++    frame_stride_ = frame_stride;
++}
++
++void SimulatorFCV1::set_removal_sheet_width(float sheet_width)
++{
++    removal_sheet_width_ = sheet_width;
++}
++
++const std::vector<float> &SimulatorFCV1::recorded_frames() const
++{
++    return frames_;
++}
++
++int SimulatorFCV1::recorded_step_count() const
++{
++    return step_count_;
++}
++
++const std::vector<int> &SimulatorFCV1::removed_steps() const
++{
++    return removed_steps_;
++}
++
+ void SimulatorFCV1::set_stones()
+ {
+     // update bodies
+@@ -588,6 +681,8 @@ std::tuple<py::array_t<double, 3>, py::list> StoneSimulator::simulator(py::array
+     }
+ 
+     simulatorFCV1 = new SimulatorFCV1(storage);
++    simulatorFCV1->set_frame_stride(frame_stride_);
++    simulatorFCV1->set_removal_sheet_width(removal_sheet_width_);
+     simulatorFCV1->change_shot(this->total_shot);
+     simulatorFCV1->set_stones();
+     if (applied_rule == 2) // modified free guard zone rule
+@@ -629,11 +724,51 @@ std::tuple<py::array_t<double, 3>, py::list> StoneSimulator::simulator(py::array
+     return std::make_tuple(stones_positions, trajectory_list);
+ }
+ 
++/// \brief Same pipeline as simulator(), additionally returning the recorded frames.
++/// \param[in] frame_stride Number of world steps (0.001 s each) per recorded frame.
++/// \param[in] removal_sheet_width Sheet width for the FCV1Plus play-area removal (<= 0 disables it).
++/// \returns (final_state, frames float32 (F, 16, 6) = (x, y, body angle, vx, vy, w), steps executed, removal step per slot or -1)
++std::tuple<py::array_t<double, 3>, py::array_t<float>, int, std::vector<int>> StoneSimulator::simulator_frames(py::array_t<double> stone_positions, int total_shot, double x_velocity, double y_velocity, int angular_sign, unsigned int team_id, unsigned int shot_per_team, unsigned int applied_rule, int frame_stride, double removal_sheet_width)
++{
++    if (frame_stride < 1)
++    {
++        throw py::value_error("frame_stride must be >= 1");
++    }
++    frame_stride_ = frame_stride;
++    removal_sheet_width_ = static_cast<float>(removal_sheet_width);
++    py::array_t<double, 3> final_state;
++    try
++    {
++        final_state = std::get<0>(simulator(stone_positions, total_shot, x_velocity, y_velocity, angular_sign, team_id, shot_per_team, applied_rule));
++    }
++    catch (...)
++    {
++        frame_stride_ = 10;
++        removal_sheet_width_ = 0.f;
++        throw;
++    }
++    frame_stride_ = 10;
++    removal_sheet_width_ = 0.f;
++
++    const std::vector<float> &flat = simulatorFCV1->recorded_frames();
++    const py::ssize_t frame_count = static_cast<py::ssize_t>(flat.size() / (kStoneMax * SimulatorFCV1::kRecordFields));
++    py::array_t<float> frames(std::vector<py::ssize_t>{frame_count, static_cast<py::ssize_t>(kStoneMax), static_cast<py::ssize_t>(SimulatorFCV1::kRecordFields)});
++    std::copy(flat.begin(), flat.end(), frames.mutable_data());
++    return std::make_tuple(final_state, frames, simulatorFCV1->recorded_step_count(), simulatorFCV1->removed_steps());
++}
++
+ // main関数
+ 
+ PYBIND11_MODULE(simulator, m)
+ {
+     py::class_<StoneSimulator>(m, "StoneSimulator")
+         .def(py::init<>())
+-        .def("simulator", &StoneSimulator::simulator);
++        .def("simulator", &StoneSimulator::simulator)
++        .def("simulator_frames", &StoneSimulator::simulator_frames,
++             py::arg("stone_positions"), py::arg("total_shot"), py::arg("x_velocity"), py::arg("y_velocity"),
++             py::arg("angular_sign"), py::arg("team_id"), py::arg("shot_per_team"), py::arg("applied_rule"),
++             py::arg("frame_stride") = 10, py::arg("removal_sheet_width") = 4.75);
++    m.attr("DEFAULT_FRAME_STRIDE") = 10;
++    m.attr("RECORD_VERSION") = 2;
++    m.attr("FRAME_FIELDS") = static_cast<int>(SimulatorFCV1::kRecordFields);
+ }
+\ No newline at end of file
+diff --git a/src/fcv1_simulator.hpp b/src/fcv1_simulator.hpp
+index a0cd7f6..000f15e 100644
+--- a/src/fcv1_simulator.hpp
++++ b/src/fcv1_simulator.hpp
+@@ -308,6 +308,13 @@ public:
+     void modified_fgz_checker();
+     void modified_fgz_rule();
+     std::vector<std::vector<StonePosition>> step(float seconds_per_frame);
++    // Frame recorder (read-only snapshots of the body state) and optional FCV1Plus play-area removal.
++    void set_frame_stride(int frame_stride);
++    void set_removal_sheet_width(float sheet_width);
++    const std::vector<float> &recorded_frames() const;
++    int recorded_step_count() const;
++    const std::vector<int> &removed_steps() const;
++    static constexpr int kRecordFields = 6; // per stone: x, y, angle, vx, vy, w
+     void set_stones();
+     void set_velocity(float velocity_x, float velocity_y, float angular_velocity, unsigned int shot_per_team, unsigned int team_id, unsigned int applied_rule);
+     digitalcurling3::StoneDataVector get_stones();
+@@ -326,6 +333,13 @@ private:
+     std::vector<int> protected_stones_modified_fgz;
+     std::vector<StonePosition> trajectory;
+     std::vector<std::vector<StonePosition>> trajectory_list;
++    void record_frame();
++    void remove_out_of_play_area();
++    std::vector<float> frames_; // flat: frame_count * 16 stones * (x, y, angle, vx, vy, w)
++    std::vector<int> removed_steps_ = std::vector<int>(kStoneMax, -1);
++    int step_count_ = 0;
++    int frame_stride_ = 10;
++    float removal_sheet_width_ = 0.f; // <= 0: removal disabled
+     digitalcurling3::FiveLockWithID five_lock_with_id;
+     int shot;
+     bool free_guard_zone;
+@@ -340,6 +354,7 @@ class StoneSimulator
+ public:
+     StoneSimulator();
+     std::tuple<py::array_t<double, 3>, py::list> simulator(py::array_t<double> stone_positions, int shot, double x_velocity, double y_velocity, int angular_sign, unsigned int team_id, unsigned int shot_per_team, unsigned int applied_rule);
++    std::tuple<py::array_t<double, 3>, py::array_t<float>, int, std::vector<int>> simulator_frames(py::array_t<double> stone_positions, int shot, double x_velocity, double y_velocity, int angular_sign, unsigned int team_id, unsigned int shot_per_team, unsigned int applied_rule, int frame_stride, double removal_sheet_width);
+ 
+ private:
+     std::vector<digitalcurling3::StoneData> storage;
+@@ -367,4 +382,6 @@ private:
+     int index;
+     int x_velocities_length;
+     int count;
++    int frame_stride_ = 10;
++    float removal_sheet_width_ = 0.f;
+ };

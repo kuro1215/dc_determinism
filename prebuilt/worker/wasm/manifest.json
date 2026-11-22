@@ -1,0 +1,182 @@
+{
+  "schema": "dc-determinism-wasm-worker-v1",
+  "worker": {
+    "path": "prebuilt/worker/wasm/dc_worker.js",
+    "sha256": "116f112f9fb208d6b8a5b45ebf82a288731823807c135b81081beb1d4da9012c",
+    "sidecars": {
+      "dc_worker.wasm": "a3c8e2f4b778ed61a6440984d950899a7091e344ca44b53ba7b7b69655497aac"
+    },
+    "runtime": "node",
+    "node_min": "v18"
+  },
+  "glue": {
+    "path": "prebuilt/worker/wasm/dc_worker.js",
+    "sha256": "116f112f9fb208d6b8a5b45ebf82a288731823807c135b81081beb1d4da9012c",
+    "note": "the Emscripten JavaScript runtime is dc_worker.js itself"
+  },
+  "source": {
+    "path": "src/worker/worker.cpp",
+    "sha256": "7dde53f77467fcf7ec1090d154b0f3e6c18f8784b66b13afc00b77f34e5b1e0d"
+  },
+  "simulator": {
+    "source": {
+      "revision": "762eef67560cd83b23ef3afd272ac45e1ff28d7b",
+      "git_tree": "777ca687c32fb23a249c5be89aedde612255f395",
+      "tree_sha256_lf": "f8dfb30b23964fb2b387dbe6c2d8af43a5d2715a2a5d3214a900acce7b91ca27"
+    },
+    "dependencies": {
+      "fpm": "61ef2c323baeea8de5fcceec4c15488d0d3d15a3b3a190d364d34ef557806714",
+      "nlohmann-json": "67f4cdd9ca930c9c1e130af4a437c7fc98fab77a2846fc2d2a14b4943831f8ef",
+      "box2d": "03d4e5466e89bea30b0dcf1efa40a7c19ef527c1d8b55192bba6f7112b9b9ffe",
+      "xxhash": "34e71c085636fbc1726482996d92719d0a16e6a6097970ecf2990a27b3821162"
+    }
+  },
+  "verified_trees": {
+    "simulator": {
+      "path": "src/vendor/digitalcurling",
+      "tree_sha256_lf": "f8dfb30b23964fb2b387dbe6c2d8af43a5d2715a2a5d3214a900acce7b91ca27"
+    },
+    "dependencies": {
+      "fpm": {
+        "pin": "b46537fe9697e1a598ac8a26f8ae43d8b286ac3f",
+        "git_tree": "43a2b87bbf9226198d3f42de8ae260329a362fae",
+        "upstream_archive_sha256": "61ef2c323baeea8de5fcceec4c15488d0d3d15a3b3a190d364d34ef557806714",
+        "tree_sha256_lf": "7f69dd0f76cd25413de370d3eed2bc64003a9f380cc457429bc47584e6d650f7"
+      },
+      "nlohmann-json": {
+        "pin": "55f93686c01528224f448c19128836e7df245f72",
+        "git_tree": "1eb780542e829bf1615828ed0d5f407497bbce7b",
+        "upstream_archive_sha256": "67f4cdd9ca930c9c1e130af4a437c7fc98fab77a2846fc2d2a14b4943831f8ef",
+        "tree_sha256_lf": "a72217c82917d57ca986b0a709c2874c11f8fb449946bd38d1526aacaea1c1d8"
+      },
+      "box2d": {
+        "pin": "9ebbbcd960ad424e03e5de6e66a40764c16f51bc",
+        "git_tree": "8e3753a2138ca248b3a4e946384366f027962992",
+        "upstream_archive_sha256": "03d4e5466e89bea30b0dcf1efa40a7c19ef527c1d8b55192bba6f7112b9b9ffe",
+        "tree_sha256_lf": "8271050a3631b98a769bb92b47ad5a6562c44e931ba90de02c0541747a233c4a"
+      },
+      "xxhash": {
+        "pin": "e626a72bc2321cd320e953a0ccf1584cad60f363",
+        "git_tree": "9d4f447c856962a98e22f144bd9b0315ab4d18f8",
+        "upstream_archive_sha256": "34e71c085636fbc1726482996d92719d0a16e6a6097970ecf2990a27b3821162",
+        "tree_sha256_lf": "5e3a87b10be604070992c07dfa15f3fd7fd90210cd6535c0990e625f2cb830c7"
+      }
+    }
+  },
+  "build": {
+    "override_sha256": "215ebd11a030aee6b513bcc3fd93eee8be8788247df63ff1857133a0d2bb2870",
+    "shim_sha256": {
+      "dcw_wasm_shim.cpp": "d6115746efd4602c1c798537344d8cd5edb1feab8e4a68253c010d9b49510d99",
+      "dcw_wasm_shim.h": "7fe8c0ed1357efe7e47cad7d3b1685c15b4144fdc2b13a0dac91919767ae6430"
+    },
+    "smoke_input": {
+      "path": "src/worker/wasm/smoke-input.bin",
+      "sha256": "9e4916295d5a217cecf43261a889be39ba622b76a3c1a404525036a161b44dde"
+    },
+    "script": "src/worker/wasm/build-wasm-worker.sh"
+  },
+  "toolchain": {
+    "image": "emscripten/emsdk:6.0.9",
+    "image_id": "sha256:96617f27fe16421588241def73908fd348a7f9d260440ed0d00b36dcf7a063cc",
+    "repo_digests": [
+      "emscripten/emsdk@sha256:96617f27fe16421588241def73908fd348a7f9d260440ed0d00b36dcf7a063cc"
+    ],
+    "emxx": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 6.0.9 (4e4223852a0835923411059a3929907d7df1232e)",
+    "emxx_version_text": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 6.0.9 (4e4223852a0835923411059a3929907d7df1232e)\nCopyright (C) 2026 the Emscripten authors (see AUTHORS.txt)\nThis is free and open source software under the MIT license.\nThere is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+    "cmake": "cmake version 3.28.3",
+    "node": "v24.19.0"
+  },
+  "flags": {
+    "configure": [
+      "-S",
+      "<repo>/src/vendor/digitalcurling",
+      "-B",
+      "<build>/cmake",
+      "-G",
+      "Unix Makefiles",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCMAKE_CXX_STANDARD=17",
+      "-DCMAKE_CXX_FLAGS=-Wno-deprecated-declarations -fwasm-exceptions -sWASM_LEGACY_EXCEPTIONS=1 -iquote <build>/override",
+      "-DBOX2D_BUILD_TESTBED=OFF",
+      "-DBOX2D_BUILD_UNIT_TESTS=OFF",
+      "-DDIGITALCURLING_BUILD_PLAYERS=OFF",
+      "-DDIGITALCURLING_BUILD_SIMULATORS=ON",
+      "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1=ON",
+      "-DDIGITALCURLING_BUILD_SIMULATOR_FCV1PLUS=ON",
+      "-DDIGITALCURLING_BUILD_PLUGIN_LOADER=ON",
+      "-DDIGITALCURLING_PLUGIN_LOADER_SHARED=OFF",
+      "-DDIGITALCURLING_BUNDLE_PLUGINS=ON",
+      "-DDIGITALCURLING_BUILD_TEST=OFF",
+      "-DDIGITALCURLING_BUILD_DOCS=OFF",
+      "-DFETCHCONTENT_SOURCE_DIR_FPM=<repo>/src/vendor/fpm",
+      "-DFETCHCONTENT_SOURCE_DIR_NLOHMANN_JSON=<repo>/src/vendor/nlohmann-json",
+      "-DFETCHCONTENT_SOURCE_DIR_BOX2D=<build>/box2d-patched",
+      "-DFETCHCONTENT_SOURCE_DIR_XXHASH=<repo>/src/vendor/xxhash",
+      "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
+    ],
+    "link": [
+      "-std=c++17",
+      "-O3",
+      "-DNDEBUG",
+      "-fwasm-exceptions",
+      "-sWASM_LEGACY_EXCEPTIONS=1",
+      "-sNODERAWFS=1",
+      "-sALLOW_MEMORY_GROWTH=1",
+      "-sENVIRONMENT=node",
+      "-sEXIT_RUNTIME=1",
+      "-DDC_WORKER_SOURCE_SHA256=\"7dde53f77467fcf7ec1090d154b0f3e6c18f8784b66b13afc00b77f34e5b1e0d\"",
+      "-DDIGITALCURLING_PLUGIN_LOADER_STATIC_DEFINE",
+      "-I",
+      "<repo>/src/vendor/digitalcurling/src/plugin-loader/include",
+      "-I",
+      "<build>/cmake/src/plugin-loader/include",
+      "-I",
+      "<repo>/src/vendor/digitalcurling/src/plugin-api/include",
+      "-I",
+      "<repo>/src/vendor/digitalcurling/src/core/include",
+      "-include",
+      "<repo>/src/worker/wasm/dcw_wasm_shim.h",
+      "<repo>/src/worker/worker.cpp",
+      "<repo>/src/worker/wasm/dcw_wasm_shim.cpp",
+      "<build>/cmake/src/plugin-loader/libdigitalcurling_plugin_loader.a",
+      "-Wl,--whole-archive",
+      "<build>/cmake/src/simulator/src/fcv1/libdigitalcurling_simulator_fcv1.a",
+      "<build>/cmake/src/simulator/src/fcv1plus/libdigitalcurling_simulator_fcv1plus.a",
+      "-Wl,--no-whole-archive",
+      "<build>/cmake/_deps/box2d-build/bin/libbox2d.a",
+      "-o",
+      "<out>/dc_worker.js"
+    ],
+    "cmake_cache": [
+      "CMAKE_BUILD_TYPE:STRING=Release",
+      "CMAKE_CXX_FLAGS:STRING=-Wno-deprecated-declarations -fwasm-exceptions -sWASM_LEGACY_EXCEPTIONS=1 -iquote <build>/override",
+      "CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG",
+      "CMAKE_CXX_STANDARD:UNINITIALIZED=17",
+      "CMAKE_GENERATOR:INTERNAL=Unix Makefiles",
+      "CMAKE_TOOLCHAIN_FILE:FILEPATH=/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake"
+    ],
+    "fp_contract": "compiler default; the wasm target has no FMA instruction (no -msimd128, no relaxed-simd)"
+  },
+  "smoke": {
+    "version": "dc_worker 7dde53f77467fcf7ec1090d154b0f3e6c18f8784b66b13afc00b77f34e5b1e0d",
+    "self_test": "OK",
+    "seconds_per_frame": {
+      "fcv1": "3a83126f",
+      "fcv1plus": "3a83126f"
+    },
+    "shots": {
+      "fcv1": [
+        "0 stopped 5214 e4423cdaf756df4a3887934723c71f12876310921930c1e5c08eba16790a87fe 8e86f6182ac2ba976eef5c9cdb912af0513001a1ee5e66b4caf240feccf64548",
+        "1 stopped 8337 2dfbddc139a760649c7d65707af92109c9a9d698568b4a72fc35de3d5d6e30ba e88c0456c4fd077146f2bfff6778d3531018fad8592ad0e155dec62c9bc13451",
+        "2 stopped 5247 140872eb76e36d59f4481e355c5c9284551fd7f7f9d9442280a8113c332ede98 788c0ee1a754a2745865257971215a376f89881af46113da44adbf61edd5e052"
+      ],
+      "fcv1plus": [
+        "0 stopped 5214 28cdfc40353e299aa2cad4af22b5bcf8bb5cd0b59d848cd11642fe3c780f5764 fb8f50519d643c404f22859b16a073a6b818a9f2ba7c9c7b11982c911157651d",
+        "1 stopped 8337 5dde29155d1ed4b10b57fcc4c6fe26d69112b89b3cac9f136e679a990ee1ded3 ded753f825418ab75688eabbc3a36133aaa7ac9989f8e1cc94cd27395ff434a9",
+        "2 stopped 5247 9c99ba1eada0cb04c9155196d60cf8ae3406574cded46015590199ff9bc199f1 788c0ee1a754a2745865257971215a376f89881af46113da44adbf61edd5e052"
+      ]
+    },
+    "container_node": "v24.19.0",
+    "host_node": "v26.13.1"
+  }
+}

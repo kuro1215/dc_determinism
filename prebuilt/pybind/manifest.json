@@ -1,0 +1,87 @@
+{
+  "schema": "dc-pybind-recording-v2-manifest-v1",
+  "engines": {
+    "fcv1-py27": {
+      "source": {
+        "repository": "https://github.com/kr-work/FCV1-Simulator.git",
+        "commit": "dc1bfeecb41c7685f68f8b9d71bf7e7009362e5c"
+      },
+      "dependencies": {
+        "box2d": {
+          "repository": "https://github.com/erincatto/box2d.git",
+          "commit": "9ebbbcd960ad424e03e5de6e66a40764c16f51bc"
+        },
+        "nlohmann_json": {
+          "repository": "https://github.com/nlohmann/json.git",
+          "commit": "11a835df85677002a8aadc5b4e945684c5b7f68b"
+        }
+      },
+      "patch": {
+        "path": "src/worker/pybind/patches/fcv1-py27-record-v2.patch",
+        "sha256": "abcc55cf7c28a50f81fa8c1ede61cd97890b705139dfbd361d0e728f01d99d55"
+      },
+      "record": {
+        "path": "prebuilt/pybind/fcv1-py27/simulator-record-v2.so",
+        "sha256": "adf9958aa1a2bd7efeadcdc514d03eb2f58e8f6d5197a7ca2f9ee7bb241c9d0b"
+      },
+      "frame_layout": "float32 (F, 16, 6) = x, y, angle, vx, vy, w; absent stone = 6 zeros",
+      "official": {
+        "path": "prebuilt/pybind/fcv1-py27/simulator-official.so",
+        "sha256": "e84c6ff60048c98436c57e2629fe3125bb8a84f14c0857c249ddba83de2b1bb9",
+        "expected_sha256": "e84c6ff60048c98436c57e2629fe3125bb8a84f14c0857c249ddba83de2b1bb9"
+      }
+    },
+    "fcv1-py36": {
+      "source": {
+        "repository": "https://github.com/kr-work/FCV1-Simulator.git",
+        "commit": "4a567c2cd46bc1ff76ae98c6dff9b491b1dd3b98"
+      },
+      "dependencies": {
+        "box2d": {
+          "repository": "https://github.com/erincatto/box2d.git",
+          "commit": "9ebbbcd960ad424e03e5de6e66a40764c16f51bc"
+        },
+        "nlohmann_json": {
+          "repository": "https://github.com/nlohmann/json.git",
+          "commit": "11a835df85677002a8aadc5b4e945684c5b7f68b"
+        }
+      },
+      "patch": {
+        "path": "src/worker/pybind/patches/fcv1-py36-record-v2.patch",
+        "sha256": "34eed6030bb27ee6f6208ad4414ce63c78f875baacbf17e83adf793f0becfcfd"
+      },
+      "record": {
+        "path": "prebuilt/pybind/fcv1-py36/simulator-record-v2.so",
+        "sha256": "e32ee00576c58481e6c5dfb35b7f37d2feac86b54dfa5eb5db2b0be3ff765cf8"
+      },
+      "frame_layout": "float32 (F, 16, 6) = x, y, angle, vx, vy, w; absent stone = 6 zeros",
+      "official": {
+        "path": "prebuilt/pybind/fcv1-py36/simulator-official.so",
+        "sha256": "3a94744a26cdbe48b5b1bf5abfde4651e959ee3be9dc021d7f926c377cca36fd",
+        "expected_sha256": "3a94744a26cdbe48b5b1bf5abfde4651e959ee3be9dc021d7f926c377cca36fd"
+      }
+    }
+  },
+  "build": {
+    "image": {
+      "name": "python@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+      "id": "sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea",
+      "pin": "python@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea"
+    },
+    "python": "3.12.14",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.41",
+    "gxx": "g++ (Debian 14.2.0-19) 14.2.0",
+    "cmake": "cmake version 4.4.4",
+    "git": "git version 2.47.3",
+    "pip_packages": {
+      "cmake": "4.4.4",
+      "pybind11": "3.1.0",
+      "numpy": "1.26.4"
+    },
+    "last_built_engines": [
+      "fcv1-py27",
+      "fcv1-py36"
+    ],
+    "note": "built in this Docker image, not in the toolchain of the official binaries (Ubuntu 22.04, GCC 11.4); same sources and flags, different compiler"
+  }
+}

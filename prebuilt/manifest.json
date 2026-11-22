@@ -1,0 +1,459 @@
+{
+  "schema": "dc-determinism-prebuilt-v2",
+  "source": {
+    "path": "src/worker/worker.cpp",
+    "sha256": "7dde53f77467fcf7ec1090d154b0f3e6c18f8784b66b13afc00b77f34e5b1e0d"
+  },
+  "binaries": {
+    "windows-amd64": {
+      "path": "prebuilt/worker/windows-amd64/dc_worker.exe",
+      "sha256": "5a6bd965fda577c63b910361acd2548713b609eb3ae7c11cc233c912ea975eed",
+      "compiler": "g++.exe (Rev4, Built by MSYS2 project) 16.2.0",
+      "flags": [
+        "-std=c++17",
+        "-O2",
+        "-static",
+        "-s",
+        "-lshell32",
+        "-ffile-prefix-map=<repo>=.",
+        "-Wl,--no-insert-timestamp"
+      ]
+    },
+    "linux-amd64": {
+      "path": "prebuilt/worker/linux-amd64/dc_worker",
+      "sha256": "60e6482a0c75fd5aed6608fdcee5ecdedb089ea87065bcb187ae90562da4b5f3",
+      "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+      "flags": [
+        "-std=c++17",
+        "-O2",
+        "-static-libstdc++",
+        "-static-libgcc",
+        "-s",
+        "-ldl"
+      ],
+      "image": "dc_determinism-cpu:local",
+      "image_id": "sha256:906b7bd93430664cd5d5f70cd1b556276c8511c9164cf8bc841487a91d46120f"
+    }
+  },
+  "players": {
+    "source": {
+      "worker": {
+        "path": "src/worker/player.cpp",
+        "sha256": "57abd496d32a3d7d0666431b79c334b5313e0fc69e9d6c023ba81fd0ae516bc4"
+      },
+      "player_library": {
+        "revision": "762eef67560cd83b23ef3afd272ac45e1ff28d7b",
+        "git_tree": "777ca687c32fb23a249c5be89aedde612255f395",
+        "tree_sha256_lf": "f8dfb30b23964fb2b387dbe6c2d8af43a5d2715a2a5d3214a900acce7b91ca27"
+      },
+      "dependencies": {
+        "fpm": {
+          "commit": "b46537fe9697e1a598ac8a26f8ae43d8b286ac3f",
+          "git_tree": "43a2b87bbf9226198d3f42de8ae260329a362fae",
+          "include_tree_sha256_lf": "84d67841eec26ae6bde8133e6ffc243f52defa2c1e5ebaa241aefbc38382aa93"
+        },
+        "nlohmann_json": {
+          "commit": "55f93686c01528224f448c19128836e7df245f72",
+          "git_tree": "1eb780542e829bf1615828ed0d5f407497bbce7b",
+          "include_tree_sha256_lf": "af58ca39e2726b720109b3a7f0e14279ca88f0d1d2f435d28aee886a0c7b3ad1"
+        }
+      }
+    },
+    "binaries": {
+      "windows-amd64-msvc/normal_dist": {
+        "path": "prebuilt/players/windows-amd64-msvc/normal_dist/worker.exe",
+        "sha256": "766bdfac1bf7d6f86940e65ad993c975470a0e45a0be9475c8d9cb3f0dade973",
+        "platform": "windows-amd64",
+        "compiler_id": "msvc",
+        "compiler": "Microsoft (R) C/C++ Optimizing Compiler Version 19.52.37029 for x64",
+        "player": "normal_dist",
+        "flags": [
+          "/nologo",
+          "/std:c++17",
+          "/EHsc",
+          "/O2",
+          "/DNDEBUG",
+          "/wd4996",
+          "/utf-8",
+          "/Brepro",
+          "/link",
+          "/Brepro"
+        ]
+      },
+      "windows-amd64-msvc/nd2": {
+        "path": "prebuilt/players/windows-amd64-msvc/nd2/worker.exe",
+        "sha256": "a70e2a49ee07248b204d9763b3d75850ee953624e02c0a12560acc6fe74af77e",
+        "platform": "windows-amd64",
+        "compiler_id": "msvc",
+        "compiler": "Microsoft (R) C/C++ Optimizing Compiler Version 19.52.37029 for x64",
+        "player": "nd2",
+        "flags": [
+          "/nologo",
+          "/std:c++17",
+          "/EHsc",
+          "/O2",
+          "/DNDEBUG",
+          "/wd4996",
+          "/utf-8",
+          "/DPLAYER_ND2",
+          "/Brepro",
+          "/link",
+          "/Brepro"
+        ]
+      },
+      "windows-amd64-gcc/normal_dist": {
+        "path": "prebuilt/players/windows-amd64-gcc/normal_dist/worker.exe",
+        "sha256": "fa380cbeb86d6bba9a6766ab5bb2555eded2021c8c923841bc8655fc0c8b4972",
+        "platform": "windows-amd64",
+        "compiler_id": "gcc",
+        "compiler": "g++.exe (Rev4, Built by MSYS2 project) 16.2.0",
+        "player": "normal_dist",
+        "flags": [
+          "-std=c++17",
+          "-O3",
+          "-DNDEBUG",
+          "-Wno-deprecated-declarations",
+          "-static",
+          "-ffile-prefix-map=<repo>=.",
+          "-Wl,--no-insert-timestamp"
+        ]
+      },
+      "windows-amd64-gcc/nd2": {
+        "path": "prebuilt/players/windows-amd64-gcc/nd2/worker.exe",
+        "sha256": "79c93ea9171208ff7c986088b088ee5b15f98ecf2ae3feaa4e014fb58ebbf47a",
+        "platform": "windows-amd64",
+        "compiler_id": "gcc",
+        "compiler": "g++.exe (Rev4, Built by MSYS2 project) 16.2.0",
+        "player": "nd2",
+        "flags": [
+          "-std=c++17",
+          "-O3",
+          "-DNDEBUG",
+          "-Wno-deprecated-declarations",
+          "-DPLAYER_ND2",
+          "-static",
+          "-ffile-prefix-map=<repo>=.",
+          "-Wl,--no-insert-timestamp"
+        ]
+      },
+      "windows-amd64-clang/normal_dist": {
+        "path": "prebuilt/players/windows-amd64-clang/normal_dist/worker.exe",
+        "sha256": "9a4fbdd850bf0ceeb2f88f20d2ebb613e5e4aa1253dd606a10e8c47a79bff098",
+        "platform": "windows-amd64",
+        "compiler_id": "clang",
+        "compiler": "clang version 22.1.8 (https://github.com/msys2/MINGW-packages d34feaaa1d0aff624c870910b6f2589aa40d20de)",
+        "player": "normal_dist",
+        "flags": [
+          "-std=c++17",
+          "-O3",
+          "-DNDEBUG",
+          "-Wno-deprecated-declarations",
+          "-static",
+          "-ffile-prefix-map=<repo>=.",
+          "-Wl,--no-insert-timestamp"
+        ]
+      },
+      "windows-amd64-clang/nd2": {
+        "path": "prebuilt/players/windows-amd64-clang/nd2/worker.exe",
+        "sha256": "092e9cff423f5ba840cb4ecf0482cd53a70b88972fb4c6d8a66c04bc55a08486",
+        "platform": "windows-amd64",
+        "compiler_id": "clang",
+        "compiler": "clang version 22.1.8 (https://github.com/msys2/MINGW-packages d34feaaa1d0aff624c870910b6f2589aa40d20de)",
+        "player": "nd2",
+        "flags": [
+          "-std=c++17",
+          "-O3",
+          "-DNDEBUG",
+          "-Wno-deprecated-declarations",
+          "-DPLAYER_ND2",
+          "-static",
+          "-ffile-prefix-map=<repo>=.",
+          "-Wl,--no-insert-timestamp"
+        ]
+      },
+      "linux-amd64-gcc/normal_dist": {
+        "path": "prebuilt/players/linux-amd64-gcc/normal_dist/worker",
+        "sha256": "4a11a68ef38824d6c7641c95dfe167637d15123ceced96a2149521cb501071fa",
+        "platform": "linux-amd64",
+        "compiler_id": "gcc",
+        "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "player": "normal_dist",
+        "flags": [
+          "-std=c++17",
+          "-O3",
+          "-DNDEBUG",
+          "-Wno-deprecated-declarations",
+          "-static-libstdc++",
+          "-static-libgcc"
+        ],
+        "image_id": "sha256:906b7bd93430664cd5d5f70cd1b556276c8511c9164cf8bc841487a91d46120f",
+        "image": "dc_determinism-cpu:local"
+      },
+      "linux-amd64-gcc/nd2": {
+        "path": "prebuilt/players/linux-amd64-gcc/nd2/worker",
+        "sha256": "a0f6212d766d1b54dfa03e6e9014f8464bd74a1287e4d52ab69580f73eab1156",
+        "platform": "linux-amd64",
+        "compiler_id": "gcc",
+        "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "player": "nd2",
+        "flags": [
+          "-std=c++17",
+          "-O3",
+          "-DNDEBUG",
+          "-Wno-deprecated-declarations",
+          "-DPLAYER_ND2",
+          "-static-libstdc++",
+          "-static-libgcc"
+        ],
+        "image_id": "sha256:906b7bd93430664cd5d5f70cd1b556276c8511c9164cf8bc841487a91d46120f",
+        "image": "dc_determinism-cpu:local"
+      },
+      "linux-amd64-clang/normal_dist": {
+        "path": "prebuilt/players/linux-amd64-clang/normal_dist/worker",
+        "sha256": "5ef346ee3d7050eca7d135890ceee5a22d9ea0eee6cdb6f645d7fb859b6b1116",
+        "platform": "linux-amd64",
+        "compiler_id": "clang",
+        "compiler": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+        "player": "normal_dist",
+        "flags": [
+          "-std=c++17",
+          "-O3",
+          "-DNDEBUG",
+          "-Wno-deprecated-declarations",
+          "-static-libstdc++",
+          "-static-libgcc"
+        ],
+        "image_id": "sha256:906b7bd93430664cd5d5f70cd1b556276c8511c9164cf8bc841487a91d46120f",
+        "image": "dc_determinism-cpu:local"
+      },
+      "linux-amd64-clang/nd2": {
+        "path": "prebuilt/players/linux-amd64-clang/nd2/worker",
+        "sha256": "4e162cafc94f727157b5b01a0b042f3f6dcca0f45a9e8f9f419552b6cce3d4cc",
+        "platform": "linux-amd64",
+        "compiler_id": "clang",
+        "compiler": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+        "player": "nd2",
+        "flags": [
+          "-std=c++17",
+          "-O3",
+          "-DNDEBUG",
+          "-Wno-deprecated-declarations",
+          "-DPLAYER_ND2",
+          "-static-libstdc++",
+          "-static-libgcc"
+        ],
+        "image_id": "sha256:906b7bd93430664cd5d5f70cd1b556276c8511c9164cf8bc841487a91d46120f",
+        "image": "dc_determinism-cpu:local"
+      },
+      "wasm/normal_dist": {
+        "path": "prebuilt/players/wasm/normal_dist/worker.js",
+        "sha256": "68f6c775686fa59097471688a695912eb6ea8a22f941f575ffbabdf28dc7ccd2",
+        "platform": "wasm",
+        "compiler_id": "wasm",
+        "compiler": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 6.0.9 (4e4223852a0835923411059a3929907d7df1232e)",
+        "player": "normal_dist",
+        "flags": [
+          "-std=c++17",
+          "-O3",
+          "-DNDEBUG",
+          "-Wno-deprecated-declarations",
+          "-fexceptions",
+          "-sNODERAWFS=1",
+          "-sALLOW_MEMORY_GROWTH=1",
+          "-sENVIRONMENT=node"
+        ],
+        "image": "emscripten/emsdk:6.0.9",
+        "image_id": "sha256:96617f27fe16421588241def73908fd348a7f9d260440ed0d00b36dcf7a063cc",
+        "sidecars": {
+          "worker.wasm": {
+            "path": "prebuilt/players/wasm/normal_dist/worker.wasm",
+            "sha256": "74b3a0abb91127c75e7b7b303b0f9e357f9046c38df783015e3904f9ad989fff"
+          }
+        }
+      },
+      "wasm/nd2": {
+        "path": "prebuilt/players/wasm/nd2/worker.js",
+        "sha256": "2ffcb3f8cf942594fea779047add0a46df2e5737157bf8ef794be2974951031e",
+        "platform": "wasm",
+        "compiler_id": "wasm",
+        "compiler": "emcc (Emscripten gcc/clang-like replacement + linker emulating GNU ld) 6.0.9 (4e4223852a0835923411059a3929907d7df1232e)",
+        "player": "nd2",
+        "flags": [
+          "-std=c++17",
+          "-O3",
+          "-DNDEBUG",
+          "-Wno-deprecated-declarations",
+          "-fexceptions",
+          "-sNODERAWFS=1",
+          "-sALLOW_MEMORY_GROWTH=1",
+          "-sENVIRONMENT=node",
+          "-DPLAYER_ND2"
+        ],
+        "image": "emscripten/emsdk:6.0.9",
+        "image_id": "sha256:96617f27fe16421588241def73908fd348a7f9d260440ed0d00b36dcf7a063cc",
+        "sidecars": {
+          "worker.wasm": {
+            "path": "prebuilt/players/wasm/nd2/worker.wasm",
+            "sha256": "0e7b786ab21093fd58dae626f7a91aaa036346ae8f9cbc3b252921ba55f7165b"
+          }
+        }
+      }
+    }
+  },
+  "toolchain": {
+    "windows-amd64": {
+      "msvc": {
+        "cl": "Microsoft (R) C/C++ Optimizing Compiler Version 19.52.37029 for x64",
+        "toolset_dir": "14.52.37025",
+        "link": "Microsoft (R) Incremental Linker Version 14.52.37029.0",
+        "windows_sdk": "10.0.26100.0",
+        "ucrt": "10.0.26100.0",
+        "ninja": "1.13.2",
+        "cmake": "cmake version 4.4.4"
+      },
+      "gcc": {
+        "compiler": "g++.EXE (Rev4, Built by MSYS2 project) 16.2.0",
+        "ld": "GNU ld (GNU Binutils) 2.47.20260726",
+        "msys2_packages": {
+          "mingw-w64-ucrt-x86_64-binutils": "2.47-3",
+          "mingw-w64-ucrt-x86_64-clang": "22.1.8-3",
+          "mingw-w64-ucrt-x86_64-clang-libs": "22.1.8-3",
+          "mingw-w64-ucrt-x86_64-crt": "14.0.0.r426.g4564ee4b5-1",
+          "mingw-w64-ucrt-x86_64-gcc": "16.2.0-4",
+          "mingw-w64-ucrt-x86_64-headers": "14.0.0.r426.g4564ee4b5-1",
+          "mingw-w64-ucrt-x86_64-libgcc": "16.2.0-4",
+          "mingw-w64-ucrt-x86_64-libstdc++": "16.2.0-4",
+          "mingw-w64-ucrt-x86_64-libwinpthread": "14.0.0.r426.g4564ee4b5-1",
+          "mingw-w64-ucrt-x86_64-winpthreads": "14.0.0.r426.g4564ee4b5-1"
+        },
+        "runtime_dlls": {
+          "libgcc_s_seh-1.dll": "68ca4574b331402879dec403ba4f14491c9b8fc4aa3f4a41432008714b9bc5df",
+          "libstdc++-6.dll": "b30dbd914d903992acb28b38455947153886656beafbd91c465c31aa258f9c45",
+          "libwinpthread-1.dll": "76cc52adfcdb8c800813b2ae8da42a908934eb1ee54ce8e9744fc8d703c76ee1"
+        },
+        "ninja": "1.13.2",
+        "cmake": "cmake version 4.4.4"
+      },
+      "clang": {
+        "compiler": "clang version 22.1.8 (https://github.com/msys2/MINGW-packages d34feaaa1d0aff624c870910b6f2589aa40d20de)",
+        "ld": "GNU ld (GNU Binutils) 2.47.20260726",
+        "msys2_packages": {
+          "mingw-w64-ucrt-x86_64-binutils": "2.47-3",
+          "mingw-w64-ucrt-x86_64-clang": "22.1.8-3",
+          "mingw-w64-ucrt-x86_64-clang-libs": "22.1.8-3",
+          "mingw-w64-ucrt-x86_64-crt": "14.0.0.r426.g4564ee4b5-1",
+          "mingw-w64-ucrt-x86_64-gcc": "16.2.0-4",
+          "mingw-w64-ucrt-x86_64-headers": "14.0.0.r426.g4564ee4b5-1",
+          "mingw-w64-ucrt-x86_64-libgcc": "16.2.0-4",
+          "mingw-w64-ucrt-x86_64-libstdc++": "16.2.0-4",
+          "mingw-w64-ucrt-x86_64-libwinpthread": "14.0.0.r426.g4564ee4b5-1",
+          "mingw-w64-ucrt-x86_64-winpthreads": "14.0.0.r426.g4564ee4b5-1"
+        },
+        "runtime_dlls": {
+          "libgcc_s_seh-1.dll": "68ca4574b331402879dec403ba4f14491c9b8fc4aa3f4a41432008714b9bc5df",
+          "libstdc++-6.dll": "b30dbd914d903992acb28b38455947153886656beafbd91c465c31aa258f9c45",
+          "libwinpthread-1.dll": "76cc52adfcdb8c800813b2ae8da42a908934eb1ee54ce8e9744fc8d703c76ee1"
+        },
+        "ninja": "1.13.2",
+        "cmake": "cmake version 4.4.4"
+      }
+    },
+    "linux-amd64": {
+      "image": "dc_determinism-cpu:local",
+      "image_id": "sha256:906b7bd93430664cd5d5f70cd1b556276c8511c9164cf8bc841487a91d46120f"
+    },
+    "wasm": {
+      "image": "emscripten/emsdk:6.0.9",
+      "image_id": "sha256:96617f27fe16421588241def73908fd348a7f9d260440ed0d00b36dcf7a063cc"
+    }
+  },
+  "dc_determinism": {
+    "source": {
+      "path": "src/dc_determinism",
+      "tree_sha256_lf": "d8f5b5aa3c526a8e339f3ce475fcafae18907ef2c23facb0ff71cf02fd7d3b25",
+      "dependencies": {
+        "nlohmann-json": {
+          "path": "src/vendor/nlohmann-json",
+          "pin": "55f93686c01528224f448c19128836e7df245f72",
+          "tree_sha256_lf": "a72217c82917d57ca986b0a709c2874c11f8fb449946bd38d1526aacaea1c1d8"
+        },
+        "miniz": {
+          "path": "src/vendor/miniz",
+          "pin": "77d0dce8627735138c51770d1799a1ef48f2117d",
+          "tree_sha256_lf": "19320aeb0aa3c0727268a098e30dd7dfb84ebe746a69517d07c043d1e2ca0a58"
+        }
+      }
+    },
+    "toolchain": {
+      "windows-amd64": {
+        "cl": "Microsoft (R) C/C++ Optimizing Compiler Version 19.52.37029 for x64",
+        "toolset_dir": "14.52.37025",
+        "link": "Microsoft (R) Incremental Linker Version 14.52.37029.0",
+        "windows_sdk": "10.0.26100.0",
+        "ucrt": "10.0.26100.0",
+        "ninja": "1.13.2",
+        "cmake": "cmake version 4.4.4"
+      },
+      "linux-amd64": {
+        "image": "dc_determinism-cpu:local",
+        "image_id": "sha256:906b7bd93430664cd5d5f70cd1b556276c8511c9164cf8bc841487a91d46120f"
+      }
+    },
+    "binaries": {
+      "windows-amd64": {
+        "path": "prebuilt/dc_determinism/windows-amd64/dc_determinism.exe",
+        "sha256": "0718a909650e76288b491581d4564d8e53722e3da2af7f1a48e5af622bc4bc88",
+        "compiler": "Microsoft (R) C/C++ Optimizing Compiler Version 19.52.37029 for x64",
+        "flags": [
+          "/nologo",
+          "/TP",
+          "-DNOMINMAX",
+          "-DWIN32_LEAN_AND_MEAN",
+          "-D_CRT_SECURE_NO_WARNINGS",
+          "-external:W0",
+          "/DWIN32",
+          "/D_WINDOWS",
+          "/EHsc",
+          "/O2",
+          "/Ob2",
+          "/DNDEBUG",
+          "-std:c++17",
+          "-MT",
+          "/W4",
+          "/utf-8",
+          "/permissive-",
+          "/Brepro",
+          "/FS"
+        ],
+        "link_flags": [
+          "/nologo",
+          "/version:0.0",
+          "/machine:x64",
+          "/INCREMENTAL:NO",
+          "/subsystem:console",
+          "/Brepro"
+        ]
+      },
+      "linux-amd64": {
+        "path": "prebuilt/dc_determinism/linux-amd64/dc_determinism",
+        "sha256": "ea911f08f50cdafa96e2b2ef80b8a58367ad2d4be7661c0fbd3a6bf7c12b7491",
+        "compiler": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+        "flags": [
+          "-O3",
+          "-DNDEBUG",
+          "-std=c++17",
+          "-Wall",
+          "-Wextra",
+          "-ffp-contract=off",
+          "-ffile-prefix-map=/work=."
+        ],
+        "link_flags": [
+          "-static",
+          "strip -s"
+        ],
+        "image": "dc_determinism-cpu:local",
+        "image_id": "sha256:906b7bd93430664cd5d5f70cd1b556276c8511c9164cf8bc841487a91d46120f"
+      }
+    }
+  }
+}
