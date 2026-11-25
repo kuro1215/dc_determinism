@@ -233,10 +233,11 @@ if (-not $Explicit -and $HostArchitecture -in @('amd64', 'arm64') -and $HostArch
     exit 2
 }
 
-# Translate path arguments: values of known path options, and the two positional files of
-# `compare simulator|player A B`.
+# Translate path arguments: values of known path options, and the positional files of
+# `compare simulator|player A B` and `render trajectory A [B]`.
 $Converted = [Collections.Generic.List[string]]::new()
-$Positional = ($Forward.Count -ge 2 -and $Forward[0] -eq 'compare' -and $Forward[1] -in @('simulator', 'player'))
+$Positional = ($Forward.Count -ge 2 -and (($Forward[0] -eq 'compare' -and $Forward[1] -in @('simulator', 'player')) -or
+    ($Forward[0] -eq 'render' -and $Forward[1] -eq 'trajectory')))
 try {
     for ($i = 0; $i -lt $Forward.Count; $i++) {
         $value = $Forward[$i]
@@ -248,7 +249,7 @@ try {
             continue
         }
         if ($Positional -and $i -ge 2 -and -not $value.StartsWith('-') -and
-            ($i -eq 0 -or $Forward[$i - 1] -notin @('--output', '--workers'))) {
+            ($i -eq 0 -or $Forward[$i - 1] -notin @('--output', '--workers', '--contact-margin'))) {
             $Converted.Add((Convert-PathArgument $value)); continue
         }
         $Converted.Add($value)

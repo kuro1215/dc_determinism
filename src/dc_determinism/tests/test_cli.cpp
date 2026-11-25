@@ -71,6 +71,11 @@ TEST(accepted_invocations) {
         "compare pybind --prepared p --logs-dir l --compiler gcc --output e.json",
         "compare player l.bin r.bin --output c.json",
         "compare player l.json r.json --output c.json",
+        "render trajectory a.zip --output o",
+        "render trajectory a.zip b.zip --output o --shots ids.txt --contact-margin 0.01 --workers 2",
+        "render trajectory a.zip --output o b.zip",  // options between the positionals
+        "render trajectory a.zip --output o --contact-margin 0",
+        "render trajectory a.zip --out o --con 0.02 --sh ids.txt",
     };
     for (const char* line : good) {
         int code = outcome(line);
@@ -128,6 +133,14 @@ TEST(rejected_invocations) {
         "capture player --player nd2 --compiler wasm --output o.bin --samples 639",
         "capture player --player nd3 --compiler wasm --output o.bin",
         "compare pybind --prepared p --logs-dir l --compiler gcc --output e.json --py36-rotation reversed",
+        "render",                                                            // sub-command required
+        "render trajectory --output o",                                      // A required
+        "render trajectory a.zip",                                           // --output required
+        "render trajectory a.zip b.zip c.zip --output o",                    // too many positionals
+        "render trajectory a.zip --output o --contact-margin -0.5",
+        "render trajectory a.zip --output o --contact-margin nan",
+        "render trajectory a.zip --output o --workers 0",
+        "render trajectory a.zip --output o --bogus",
         "compare",
         "compare simulator a.json --output c.json",                          // B missing
         "compare simulator a.json b.json c.json --output d.json",
@@ -164,7 +177,8 @@ TEST(help_is_available_everywhere) {
         "--help", "-h", "prepare --help", "verify -h", "run --help", "run simulator --help", "run player -h",
         "benchmark --help", "capture --help", "capture simulator --help", "capture player -h", "compare --help",
         "compare simulator --help",
-        "compare engines --help", "compare pybind --help", "compare player --help",
+        "compare engines --help", "compare pybind --help", "compare player --help", "render --help",
+        "render trajectory --help",
     };
     for (const char* line : helps) {
         int code = outcome(line);
@@ -208,8 +222,48 @@ TEST(defaults_and_types) {
     CHECK_EQ(cmp.real("timeout"), 600.0);
     CHECK_EQ(cli::command_path(cmp), std::string("compare pybind"));
 
+    cli::ParsedArgs one = parser->parse(split("render trajectory a.zip --output o"));
+    CHECK_EQ(cli::command_path(one), std::string("render trajectory"));
+    CHECK_EQ(one.text_or("a", ""), std::string("a.zip"));
+    CHECK(!one.has("b"));
+    CHECK(!one.has("shots"));
+    CHECK_EQ(one.real("contact_margin"), 0.005);
+    CHECK(one.integer("workers") >= 1);
+    cli::ParsedArgs two = parser->parse(split("render trajectory a.zip --output o b.zip --contact-margin 0.01"));
+    CHECK_EQ(two.text_or("a", ""), std::string("a.zip"));
+    CHECK_EQ(two.text_or("b", ""), std::string("b.zip"));
+    CHECK_EQ(two.real("contact_margin"), 0.01);
+    CHECK(cli::find_handler("render trajectory") != nullptr);
+
     cli::ParsedArgs abbreviated = parser->parse(split("prepare --out o --lim=9"));
     CHECK_EQ(abbreviated.integer("limit"), static_cast<std::int64_t>(9));
+}
+
+TEST(an_optional_positional_is_shown_in_brackets_and_may_be_absent) {
+    cli::Parser parser("prog");
+    cli::Argument first;
+    first.dest = "first";
+    parser.add(first);
+    cli::Argument second;
+    second.dest = "second";
+    second.optional_positional = true;
+    parser.add(second);
+    CHECK(parser.format_usage().find("prog [-h] FIRST [SECOND]") != std::string::npos);
+    cli::ParsedArgs without = parser.parse({"x"});
+    CHECK_EQ(without.text_or("first", ""), std::string("x"));
+    CHECK(!without.has("second"));
+    cli::ParsedArgs with = parser.parse({"x", "y"});
+    CHECK_EQ(with.text_or("second", ""), std::string("y"));
+    auto exit_code = [&](const std::vector<std::string>& args) {
+        try {
+            parser.parse(args);
+            return 0;
+        } catch (const cli::ParseExit& exit) {
+            return exit.code;
+        }
+    };
+    CHECK_EQ(exit_code({"x", "y", "z"}), 2);  // unrecognized argument
+    CHECK_EQ(exit_code({}), 2);               // the first one is required
 }
 
 TEST(pybind_commands_are_part_of_the_cpp_binary) {

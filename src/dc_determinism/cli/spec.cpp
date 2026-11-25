@@ -294,6 +294,26 @@ std::unique_ptr<Parser> build_parser() {
     cplayer.add(positional("right", "RIGHT"));
     cplayer.add(required_option("--output", "comparison JSON (never overwritten)"));
 
+    Parser& render = root->add_command("render", "render capture archives as images");
+    render.add_subparsers("render_command_name");
+    Parser& rtraj = render.add_command(
+        "trajectory",
+        "SVG plot per shot of one or two `capture simulator` archives (A, and B overlaid on it), with the "
+        "collisions inferred from the stone positions");
+    rtraj.add(positional("a", "A"));
+    rtraj.add(positional("b", "B")).optional_positional = true;
+    rtraj.add(value_option("--shots",
+                           "render only these shots: a newline-separated shot-id file (default: every shot of A; "
+                           "with B: the shots in both archives)"))
+        .metavar = "FILE";
+    rtraj.add(value_option("--logs-dir",
+                           "also draw the recorded game-log trajectory of each shot (the logs the captures were "
+                           "prepared from; shots are found by shot id)"));
+    rtraj.add(bounded_float("--contact-margin", 0, 0.005,
+                            "metres added to the stone diameter for the contact test (default: 0.005)"));
+    rtraj.add(bounded_int("--workers", 1, cpus, "threads that decode and render shots (default: logical CPUs)"));
+    rtraj.add(required_option("--output", "new directory for the SVG files and render.json (never overwritten)"));
+
     Parser& prebuild = root->add_command(
         "prebuild",
         "rebuild the prebuilt dc_worker, loader and player binaries of this host, the WebAssembly dc_worker and "

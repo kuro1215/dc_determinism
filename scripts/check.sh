@@ -235,6 +235,19 @@ expect_contains "path translation --logs-dir" "$out" "/w/dc_determinism/logs"
 run_wrapper x86_64 Linux 0 "dc_determinism-cpu:local=amd64" prepare --output "$work/outside/o" --logs-dir logs
 expect_eq "outside path status" "$status" 2
 expect_contains "outside path message" "$out" "path is outside the repository and the current directory"
+# `render trajectory A [B]`: both archive paths are translated, the values of --contact-margin and --workers are not
+run_wrapper x86_64 Linux 0 "dc_determinism-cpu:local=amd64" render trajectory a.zip b.zip --contact-margin 0.01 --workers 3 --shots ids.txt --output ./x/../svg
+expect_eq "render trajectory status" "$status" 0
+expect_contains "render trajectory A is translated" "$out" "/w/dc_determinism/a.zip"
+expect_contains "render trajectory B is translated" "$out" "/w/dc_determinism/b.zip"
+expect_contains "render trajectory --shots is translated" "$out" "/w/dc_determinism/ids.txt"
+expect_contains "render trajectory --output is translated" "$out" "/w/dc_determinism/svg"
+expect_not_contains "render trajectory --contact-margin value is not translated" "$out" "/w/dc_determinism/0.01"
+expect_not_contains "render trajectory --workers value is not translated" "$out" "/w/dc_determinism/3"
+if printf '%s\n' "$out" | grep -qx -e 0.01; then ok; else fail "render trajectory --contact-margin value is passed through unchanged"; fi
+run_wrapper x86_64 Linux 0 "dc_determinism-cpu:local=amd64" render trajectory a.zip --contact-margin=0.02 --output svg
+expect_contains "render trajectory with one archive: A is translated" "$out" "/w/dc_determinism/a.zip"
+expect_contains "render trajectory --contact-margin=VALUE is passed through" "$out" "--contact-margin=0.02"
 
 # prebuild builds for the host it runs on and drives the Docker CLI: a Linux host runs its own host binary (no container),
 # for either architecture

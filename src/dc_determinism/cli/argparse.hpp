@@ -35,6 +35,7 @@ struct Argument {
     std::string help;
     bool hidden = false;              // argparse.SUPPRESS
     bool required = false;
+    bool optional_positional = false; // a positional that may be absent (argparse nargs='?'); `has()` tells
     bool store_true = false;
     bool append = false;              // a repeated option collects its values (joined by "\n") instead of replacing
     std::vector<std::string> choices;

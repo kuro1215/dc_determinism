@@ -7,6 +7,7 @@
 #include "cli/commands/prebuild.hpp"
 #include "cli/commands/prepare.hpp"
 #include "cli/commands/pybind.hpp"
+#include "cli/commands/render.hpp"
 #include "cli/commands/simulator.hpp"
 #include "common/error.hpp"
 
@@ -32,6 +33,7 @@ const Entry kHandlers[] = {
     {"compare engines", command_compare_engines},
     {"compare pybind", command_compare_pybind},
     {"compare player", command_compare_player},
+    {"render trajectory", command_render_trajectory},
     {"prebuild", command_prebuild},
 };
 
@@ -42,6 +44,7 @@ std::string command_path(const ParsedArgs& args) {
     if (path == "run") return path + " " + args.text_or("run_command_name", "");
     if (path == "capture") return path + " " + args.text_or("capture_command_name", "");
     if (path == "compare") return path + " " + args.text_or("compare_command_name", "");
+    if (path == "render") return path + " " + args.text_or("render_command_name", "");
     return path;
 }
 

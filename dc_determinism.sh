@@ -259,6 +259,7 @@ convert() {
 
 positional=0
 if [[ "${args[0]}" == compare && ( "${args[1]:-}" == simulator || "${args[1]:-}" == player ) ]]; then positional=1; fi
+if [[ "${args[0]}" == render && "${args[1]:-}" == trajectory ]]; then positional=1; fi
 converted=()
 for ((i = 0; i < ${#args[@]}; i++)); do
     a="${args[$i]}"
@@ -272,7 +273,7 @@ for ((i = 0; i < ${#args[@]}; i++)); do
     fi
     if (( positional && i >= 2 )) && [[ "$a" != -* ]]; then
         prev="${args[$((i - 1))]}"
-        if [[ "$prev" != --workers ]]; then
+        if [[ "$prev" != --workers && "$prev" != --contact-margin ]]; then
             converted+=("$(convert "$a")") || exit 2; continue
         fi
     fi

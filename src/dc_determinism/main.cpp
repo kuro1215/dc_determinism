@@ -8,6 +8,7 @@
 //   process/  child processes (CreateProcessW / posix_spawn), process groups
 //   cli/      argparse-like parser, the dc_determinism command line (spec.cpp), command dispatch
 //   cli/commands/ one source per command
+//   render/   SVG plots of captured shots and the collisions inferred from the stone positions (render trajectory)
 //   localbuild/ recipe library of `prebuild`: vendored-source identity, receipts and cache of the local builds; the
 //             toolchain (compiler discovery and environment) is scripts/build-local.ps1
 //   tools/    build-time helpers; tests/ unit tests (CTest)

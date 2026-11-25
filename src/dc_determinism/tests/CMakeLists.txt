@@ -12,7 +12,7 @@ function(dc_determinism_scaled_timeout seconds result)
     set(${result} ${scaled} PARENT_SCOPE)
 endfunction()
 
-foreach(name sha256 pyfloat json zip fs process cli corpus sim logs capture player localbuild wasm platform prebuild pybind)
+foreach(name sha256 pyfloat json zip fs process cli corpus sim logs capture player localbuild wasm platform prebuild pybind render)
     add_executable(test_${name} test_${name}.cpp)
     target_link_libraries(test_${name} PRIVATE dc_determinism_core dc_determinism_flags)
     target_include_directories(test_${name} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")

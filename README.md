@@ -124,6 +124,7 @@ bash dc_determinism.sh image build [--tag dc_determinism-cpu:local] [--platform 
 | `compare simulator A B` | Compares two `run simulator` results, or two `capture simulator` archives |
 | `compare engines` | Compares FCV1 and FCV1Plus in lockstep |
 | `capture simulator` | Saves the full trajectories of selected shots in a ZIP archive |
+| `render trajectory A [B]` | Draws every shot of one or two `capture simulator` archives as an SVG plot, with the collisions inferred from the stone positions |
 | `run player` / `capture player` / `compare player` | Checks the reproducibility of the random output of the players and compares it across configurations |
 | `benchmark` | Measures the simulation speed (serially) |
 | `compare pybind` | Compares the C API version with the official pybind version (FCV1-Simulator); linux-amd64 only |
@@ -151,6 +152,7 @@ file.
 | `run player` | Reproducible | Not reproducible | Error |
 | `compare player` | Equal | Not equal, or a side is not reproducible | Error |
 | `capture simulator`, `capture player` | Success | Does not match `--expect` | Error |
+| `render trajectory` | Success | — | Error |
 | `verify` | Verified | — | Verification failed, or error |
 | `benchmark` | Success | — | Error |
 
@@ -237,6 +239,54 @@ The archive holds `index.json` (corpus identifiers, selected shots, records of t
 `shots/<index>.dctr` per shot. The `dctr-v1` format is the magic `DCTR0001`, a JSON header, and, per stone and field,
 the byte planes of the frame-to-frame XOR differences, compressed with zlib (about 24 times smaller;
 `src/dc_determinism/capture/dctr.cpp`).
+
+## `render trajectory`
+
+Draws the shots of one or two `capture simulator` archives as SVG files, for looking at a trajectory difference.
+
+```powershell
+.\dc_determinism-native.ps1 render trajectory results\capture-fcv1-msvc.zip results\capture-fcv1-gcc.zip `
+  --shots results\ids.txt --output results\svg
+```
+
+`render trajectory A [B] [--shots FILE] [--logs-dir DIR] [--contact-margin M] [--workers N] --output DIR`
+
+- `A` is required, `B` is optional. Both are `capture simulator` archives of any engine (pybind captures included). With
+  `B` the two are overlaid in one SVG per shot (A green, B blue); the legend shows `A: <engine> <compiler>` from the
+  archive (the compiler only when the archive records a loader).
+- Shots: every shot of A. With `B`, the shots present in both archives (matched by `shot_id`; their corpus `index` must
+  be equal). Shots only in A or only in B are not drawn; they are listed in `render.json` as `a_only` / `b_only`.
+  `--shots FILE` (one `shot_id` per line, blank lines ignored) restricts the selection; an id that is in neither
+  archive is an error.
+- `--output DIR` is a new directory (an existing path is an error; its parent must exist). It holds `<index>.svg` per
+  shot (the corpus `index`, because shot ids contain `/` and `:`) and `render.json`
+  (`dc-determinism-render-v1`), which is written last: it records the tool, the inputs (path, SHA-256, engine,
+  compiler), `contact_margin_m`, the per-shot status, frame count and inferred collisions of each source, `a_only`,
+  `b_only`, and the differences of the archive contracts (`observation`, `max_steps`, `record_digest`,
+  `corpus_input_sha256`) between A and B, which are only a warning here. When an error occurs, the command removes
+  what it wrote. Zero selected shots is valid (no SVG, `shots: []`). The output does not depend on `--workers`
+  (default: the logical CPUs).
+- The plot shows the house view (y 31 to 41 m): the path of every stone that moved (at least 5 cm) or was delivered, a
+  dashed circle at the initial position of the moved stones, a filled circle and `sid N` label at the final position of
+  every stone, and the numbered collision markers `A1, A2, ..., B1, ...` with a side panel (up to 8 per source). Moved
+  stones are drawn only inside the view; collisions outside the view appear in the panel and in `render.json`.
+- Collisions are **inferred from the recorded positions**, not read from the simulator: two stones are in contact when
+  their centres are at most `2 x 0.145 m + M` apart (`--contact-margin`, default 0.005 m). A contact counts once and
+  the pair is armed again when the distance exceeds `contact distance + M` or a stone disappears; a pair touching in
+  the initial state, or a stone that appears in contact, is no collision. Per collision `render.json` has the step
+  (frame index; the archives have no times), the collider (the faster stone before contact) and target, the contact
+  point, the collider speed, the relative speed before contact and the target speed after the stones separated (m/s,
+  from the recorded velocities). Simulator-internal collision events and impulses are not in the captures and are not
+  shown.
+- `--logs-dir DIR` also draws the recorded game-log trajectory of each shot (the logs the captures were prepared from,
+  found by `shot_id`): a thin grey line on top of the engine paths, grey circles at the recorded final positions and a
+  legend row `log  frames=N  seconds_per_frame=S`. No collisions are inferred from the log (its frames are 0.1 s apart).
+  `render.json` gets `logs` (path, `input_sha256` of the logs and whether it equals A's `corpus_input_sha256`; a
+  mismatch is only a warning), per shot `log` (`frames` incl. the start board, `seconds_per_frame`) and `log_missing`
+  (shots drawn without a log). Without the option these are `null` / `[]`. A logs directory without shots, an empty
+  value or a malformed log is an error.
+- The wrappers translate the archive paths and the values of `--shots`, `--logs-dir` and `--output` for the container;
+  they do it for exact option names only (an abbreviation such as `--out` is not translated by `dc_determinism.ps1` / `.sh`).
 
 ## `compare engines`
 

@@ -89,6 +89,7 @@ add_library(dc_determinism_core STATIC
     cli/commands/player_common.cpp
     cli/commands/prebuild.cpp
     cli/commands/prepare.cpp
+    cli/commands/render.cpp
     cli/commands/run_player.cpp
     cli/commands/run_simulator.cpp
     cli/commands/verify.cpp
@@ -120,6 +121,7 @@ add_library(dc_determinism_core STATIC
     prebuild/prebuild.cpp
     process/process.cpp
     pybind/pybind.cpp
+    render/trajectory_svg.cpp
     sim/bench.cpp
     sim/compare.cpp
     sim/compilers.cpp

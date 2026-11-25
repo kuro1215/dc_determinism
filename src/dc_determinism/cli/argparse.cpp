@@ -529,7 +529,7 @@ void Parser::parse_into(const std::vector<std::string>& args, ParsedArgs& out,
     // Required arguments, then required exclusive groups (argparse order).
     std::vector<std::string> missing;
     for (const Argument& argument : arguments_) {
-        bool is_required = argument.flags.empty() || argument.required;
+        bool is_required = (argument.flags.empty() && !argument.optional_positional) || argument.required;
         if (!is_required) continue;
         if (std::find(seen.begin(), seen.end(), &argument) == seen.end()) missing.push_back(display_name(argument));
     }
@@ -583,7 +583,7 @@ std::string Parser::usage_part(const Argument& argument) const {
     } else {
         value = argument.metavar;
     }
-    if (argument.flags.empty()) return value;
+    if (argument.flags.empty()) return argument.optional_positional ? "[" + value + "]" : value;
     std::string flag = argument.flags[0];
     std::string part = argument.store_true ? flag : flag + " " + value;
     return argument.required ? part : "[" + part + "]";
