@@ -1,0 +1,240 @@
+name: sync-wiki-docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/sync-wiki-docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-wiki-docs
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+
+      - name: Clone the Wiki
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          basic="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 | tr -d '\n')"
+          echo "::add-mask::$basic"
+          auth="AUTHORIZATION: basic $basic"
+
+          wiki="$(mktemp -d "$RUNNER_TEMP/wiki.XXXXXX")"
+          if ! git -c http.extraheader="$auth" clone --depth 1 \
+              "https://github.com/${REPOSITORY}.wiki.git" "$wiki"; then
+            echo "::error::Cannot clone the Wiki: the Wiki has no pages yet; create the first page on GitHub once."
+            exit 1
+          fi
+
+          # An all-deleted docs/ is absent after checkout.
+          mkdir -p docs
+          echo "WIKI_DIR=$wiki" >> "$GITHUB_ENV"
+          echo "REF=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Publish docs/ as pages
+        env:
+          DOCS_DIR: docs
+        run: |
+          # Publishes the Markdown files of docs/ as pages of the checked-out Wiki working tree. No network, no git.
+          #
+          #   DOCS_DIR     directory whose direct *.md children become wiki pages (subdirectories are ignored)
+          #   WIKI_DIR     existing working tree of the wiki
+          #   REF          revision (usually a commit SHA) the page header points to
+          #
+          # Links to other pages are rewritten because wiki pages have no .md extension:
+          #   ](NAME.md[#a])  ->  ](NAME[#a])
+          # Other links stay as they are; link to repository files with absolute URLs.
+          #
+          # A line consisting only of <!-- pages --> is replaced by a list of links to the other published pages, titled by
+          # their first "# " heading (for example in docs/Home.md, so that the Home page lists every page).
+          #
+          # WIKI_DIR/.docs-sync lists the pages written by the last sync. Listed pages that are gone from DOCS_DIR are
+          # deleted; other wiki pages (for example a hand-written Home.md) are never touched.
+          set -euo pipefail
+
+          docs_dir="${DOCS_DIR:-}"
+          wiki_dir="${WIKI_DIR:-}"
+          ref="${REF:-}"
+
+          [ -n "$docs_dir" ] && [ -d "$docs_dir" ] || { echo "::error::sync-wiki-docs: docs directory not found: $docs_dir"; exit 1; }
+          [ -n "$wiki_dir" ] && [ -d "$wiki_dir" ] || { echo "::error::sync-wiki-docs: wiki directory not found: $wiki_dir"; exit 1; }
+          [ -n "$ref" ] || { echo "::error::sync-wiki-docs: REF is empty"; exit 1; }
+
+          manifest="$wiki_dir/.docs-sync"
+          nl=$'\n'
+
+          # A plain basename ending in .md, not starting with a dot, without a path separator, LF or CR.
+          valid_name() {
+              case "$1" in
+                  '' | .* | */* | *\\* | *$'\n'* | *$'\r'*) return 1 ;;
+                  *.md) return 0 ;;
+                  *) return 1 ;;
+              esac
+          }
+
+          # The page-list marker: the whole line, optionally surrounded by whitespace ([[:space:]] includes the CR of CRLF).
+          marker_re='^[[:space:]]*<!-- pages -->[[:space:]]*$'
+
+          list_file="$(mktemp)"
+          trap 'rm -f -- "$list_file"' EXIT
+
+          # Writes to list_file one link per page given as argument, in argument order, titled by the page's first "# "
+          # heading outside fenced code blocks (or its name). One awk run reads every page; LC_ALL=C makes it byte-wise.
+          write_page_list() {
+              LC_ALL=C awk -v dir="$docs_dir" '
+                  BEGIN {
+                      for (i = 1; i < ARGC; i++) ARGV[i] = dir "/" ARGV[i]
+                      for (i = 1; i < 256; i++) ord[sprintf("%c", i)] = i
+                  }
+                  # Percent-encodes every byte except the URL-unreserved characters.
+                  function url_encode(s,    out, c, i) {
+                      out = ""
+                      for (i = 1; i <= length(s); i++) {
+                          c = substr(s, i, 1)
+                          out = out (c ~ /[A-Za-z0-9._~-]/ ? c : sprintf("%%%02X", ord[c]))
+                      }
+                      return out
+                  }
+                  function is_fence(line,    i) {
+                      i = 1
+                      while (i <= 3 && substr(line, i, 1) == " ") i++
+                      line = substr(line, i)
+                      fence_char = substr(line, 1, 1)
+                      if (fence_char != "`" && fence_char != "~") return 0
+                      fence_len = 0
+                      while (substr(line, fence_len + 1, 1) == fence_char) fence_len++
+                      fence_rest = substr(line, fence_len + 1)
+                      return fence_len >= 3
+                  }
+                  FNR == 1 { open_len = 0 }
+                  FILENAME in title { next }
+                  open_len > 0 {
+                      # Inside a block: only a fence of the same character, at least as long, with nothing after it closes it.
+                      if (is_fence($0) && fence_char == open_char && fence_len >= open_len && fence_rest ~ /^[[:space:]]*$/)
+                          open_len = 0
+                      next
+                  }
+                  is_fence($0) { open_char = fence_char; open_len = fence_len; next }
+                  /^#[[:space:]]/ {
+                      sub(/\r$/, ""); sub(/^#[[:space:]]+/, ""); sub(/[[:space:]]+#+[[:space:]]*$/, ""); sub(/[[:space:]]+$/, "")
+                      title[FILENAME] = $0
+                  }
+                  # Empty files have no records, so the list is written from ARGV.
+                  END {
+                      for (i = 1; i < ARGC; i++) {
+                          name = ARGV[i]
+                          sub(/.*\//, "", name)
+                          sub(/\.md$/, "", name)
+                          t = title[ARGV[i]]
+                          if (t == "") t = name
+                          # Brackets, parentheses and backslashes are escaped so that the title cannot form a link.
+                          gsub(/[][()\\]/, "\\\\&", t)
+                          printf "- [%s](%s)\n", t, url_encode(name)
+                      }
+                  }
+              ' "$@" > "$list_file"
+          }
+
+          # Copies stdin to stdout with every marker line replaced by the lines of list_file except line $1.
+          expand_markers() {
+              awk -v list="$list_file" -v re="$marker_re" -v skip="$1" '
+                  $0 ~ re {
+                      n = 0
+                      while ((getline item < list) > 0) if (++n != skip) print item
+                      close(list)
+                      next
+                  }
+                  { print }
+              '
+          }
+
+          # Pages to publish: the direct children of docs_dir.
+          pages=()
+          new_list=""
+          for file in "$docs_dir"/*.md; do
+              [ -f "$file" ] || continue
+              name="$(basename -- "$file")"
+              if valid_name "$name"; then
+                  pages+=("$name")
+                  new_list="$new_list$name$nl"
+              else
+                  echo "sync-wiki-docs: skipping invalid page name: $name" >&2
+              fi
+          done
+
+          # Pages written by the last sync that are gone now.
+          if [ -f "$manifest" ]; then
+              while IFS= read -r entry || [ -n "$entry" ]; do
+                  entry="${entry%$'\r'}"
+                  [ -n "$entry" ] || { echo "sync-wiki-docs: ignoring an empty line in .docs-sync" >&2; continue; }
+                  if ! valid_name "$entry"; then
+                      echo "sync-wiki-docs: ignoring invalid entry in .docs-sync: $entry" >&2
+                      continue
+                  fi
+                  case "$nl$new_list" in
+                      *"$nl$entry$nl"*) ;;
+                      *) rm -f -- "$wiki_dir/$entry" ;;
+                  esac
+              done < "$manifest"
+          fi
+
+          # Write the pages and the new manifest.
+          # Remove before writing so that a symlink in the wiki is replaced, never written through.
+          rm -f -- "$manifest"
+          : > "$manifest"
+          list_written=false
+          for i in "${!pages[@]}"; do
+              name="${pages[i]}"
+              rm -f -- "$wiki_dir/$name"
+              # The list is inserted after the link rewriting, so that its targets are never rewritten.
+              if grep -qE -- "$marker_re" "$docs_dir/$name"; then
+                  "$list_written" || { write_page_list "${pages[@]}"; list_written=true; }
+                  post_cmd=(expand_markers "$((i + 1))")
+              else
+                  post_cmd=(cat)
+              fi
+              {
+                  printf '<!-- Generated from docs/%s at %s; edit it in the repository. -->\n' "$name" "$ref"
+                  sed -E -e 's|\]\(([A-Za-z0-9_.-]+)\.md(#[^)]*)?\)|](\1\2)|g' "$docs_dir/$name" | "${post_cmd[@]}"
+              } > "$wiki_dir/$name"
+              printf '%s\n' "$name" >> "$manifest"
+          done
+
+          echo "sync-wiki-docs: published $(grep -c . "$manifest" || true) page(s)"
+
+      - name: Commit and push
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          basic="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 | tr -d '\n')"
+          echo "::add-mask::$basic"
+          auth="AUTHORIZATION: basic $basic"
+
+          cd "$WIKI_DIR"
+          git add -A
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "The Wiki is already up to date."
+            exit 0
+          fi
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -m "docs: sync from ${REF:0:7}"
+          git -c http.extraheader="$auth" push origin HEAD
